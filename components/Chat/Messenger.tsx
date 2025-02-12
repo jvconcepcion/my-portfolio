@@ -4,7 +4,9 @@ import { useState, useEffect, FormEvent } from 'react';
 import { MessengerProps } from '@interfaces';
 import {
   MdOutlineDarkMode,
-  MdDarkMode
+  MdDarkMode,
+  MdRecordVoiceOver,
+  MdContentCopy
 } from 'react-icons/md';
 import Image from 'next/image';
 
@@ -17,6 +19,24 @@ const Messenger: React.FC = () => {
   useEffect(() => {
     localStorage.setItem("chat_messages", JSON.stringify(messages));
   }, [messages]);
+
+  const speakText = (text: string) => {
+    if ("speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(utterance);
+    } else {
+      console.log("Text-to-Speech is not supported in this browser.");
+    }
+  };
+  
+  const copyText = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      console.log("Copied to clipboard!");
+    } catch (err) {
+      console.log("Failed to copy text.");
+    }
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -70,8 +90,24 @@ const Messenger: React.FC = () => {
       {/* Chat Messages */}
       <div className={`h-96 overflow-y-auto space-y-4 p-4 ${darkMode ? "bg-gray-800" : "bg-white"}`}>
         {messages.map((msg: any, index: number) => (
-          <div key={index} className={`text-xs p-3 rounded-md ${msg.role === "user" ? "bg-blue-500 text-white ml-auto max-w-[80%]" : darkMode ? "bg-gray-700 text-gray-300" : "bg-gray-100 text-gray-800 mr-auto max-w-[80%]"}`}>
-            {msg.content}
+          <div
+            key={index}
+            className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}
+          >
+            {/* Chat Bubble */}
+            <div className={`text-xs p-3 rounded-md ${msg.role === "user" ? "bg-blue-500 text-white max-w-[80%]" : darkMode ? "bg-gray-700 text-gray-300" : "bg-gray-100 text-gray-800"} relative max-w-[80%]`}>
+              {msg.content}
+            </div>
+
+            {/* Icons - Positioned below the message */}
+            <div className="flex items-center gap-1 mt-1">
+              <button onClick={() => speakText(msg.content)} className="p-1 bg-transparent hover:bg-gray-500 rounded">
+                <MdRecordVoiceOver size={15} />
+              </button>
+              <button onClick={() => copyText(msg.content)} className="p-1 bg-transparent hover:bg-gray-500 rounded">
+                <MdContentCopy size={15} />
+              </button>
+            </div>
           </div>
         ))}
       </div>
