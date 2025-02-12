@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Abstract, Circles, PipBoy, ServiceSlider } from '@components';
+import { Abstract, Circles, PipBoy, ServiceSlider, ChatPopUp } from '@components';
 import { motion } from 'framer-motion';
 import { fadeIn } from '@utils/variants';
 
@@ -9,6 +9,7 @@ const ServicesSection = () => {
   return (
     <>
       <Abstract />
+      <ChatPopUp />
       <div className='container mx-auto'>
         <div className='flex flex-col xl:flex-row gap-x-8'>
           <div className='text-center flex xl:w-[30vw] flex-col lg:text-left mb-4 xl:mb-0'>

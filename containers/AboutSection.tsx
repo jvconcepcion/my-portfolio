@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react'
-import { Avatar, Abstract, IconCloud, TextCloud, StackList } from '@components';
+import { Avatar, Abstract, IconCloud, TextCloud, StackList, ChatPopUp } from '@components';
 
 import { motion } from 'framer-motion';
 import { experienceOptions, educationOptions, fadeIn } from '@utils/variants';
@@ -101,6 +101,7 @@ const AboutSection = () => {
   return (
     <>
       <Abstract />
+      <ChatPopUp />
       <motion.div
         className='hidden xl:flex absolute bottom-0 -left-[10rem]'
         variants={fadeIn('right', 0.2)}

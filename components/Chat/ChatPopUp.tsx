@@ -10,15 +10,28 @@ import {
 } from '@components';
 
 const ChatPopUp: React.FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(() => JSON.parse(localStorage.getItem("chat_is_open") || "false"));
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const mainButton = {
     open: { rotate: 90 },
     closed: { rotate: 0 },
   };
 
   useEffect(() => {
-    localStorage.setItem("chat_is_open", JSON.stringify(isOpen));
-  }, [isOpen]); 
+    if (typeof window !== "undefined") {
+      const storedValue = localStorage.getItem("chat_is_open");
+      setIsOpen(storedValue ? JSON.parse(storedValue) : false);
+    }
+  }, []);
+
+  const toggleChat = () => {
+    setIsOpen((prev) => {
+      const newState = !prev;
+      if (typeof window !== "undefined") {
+        localStorage.setItem("chat_is_open", JSON.stringify(newState));
+      }
+      return newState;
+    });
+  };
 
   return (
     <motion.div
@@ -51,11 +64,7 @@ const ChatPopUp: React.FC = () => {
     {/* Chat Button */}
     <motion.button
       className="fixed bottom-[7rem] right-8 lg:right-10 z-[100] rounded-full p-4 text-4xl group hover:text-accent"
-      onClick={() => {
-        const newState = !isOpen;
-        setIsOpen(newState);
-        localStorage.setItem("chat_is_open", JSON.stringify(newState));
-      }}
+      onClick={toggleChat}
       variants={mainButton}
       initial="closed"
       animate={isOpen ? 'open' : 'closed'}
