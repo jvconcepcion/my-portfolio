@@ -320,7 +320,21 @@ export const workData: WorkDataProps = {
           title: 'Rappler Election 2022',
           path: '/proj-rappler-election.jpg',
           link: 'https://ph.rappler.com'
+        }
+      ],
+    },
+    {
+      images: [
+        {
+          title: 'Metrobank Command Center',
+          path: '/mbcc.jpg',
+          link: 'https://onlinebanking.metrobank.com.ph/signin'
         },
+        {
+          title: 'Metrobank Online Banking',
+          path: '/mbo.jpg',
+          link: 'https://onlinebanking.metrobank.com.ph/signin'
+        }
       ],
     },
   ],

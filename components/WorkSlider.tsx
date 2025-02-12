@@ -9,16 +9,24 @@ import { BsArrowRight } from 'react-icons/bs'
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+
 const WorkSlider = () => {
   type SlideProps = WorkDataProps["slides"][0];
   type ImageProps = SlideProps["images"][0];
 
   return (
-    <div
+    <Swiper
+      spaceBetween={10}
+      pagination={{
+        clickable: true,
+      }}
+      modules={[Pagination]}
       className='h-[280px] sm:h-[480px]'
     >
       {workData.slides.map((item: SlideProps, i: number) => (
-        <div key={i}>
+        <SwiperSlide key={i}>
           <div
             className='grid grid-cols-2 grid-rows-2 gap-4'
           >
@@ -44,7 +52,7 @@ const WorkSlider = () => {
                       <div className='delay-100'>{image.title}</div>
                       <div className='delay-100'>
                         <Link href={image.link} target="_blank" passHref rel="noopener noreferrer">
-                          <BsArrowRight className='cursor-pointer'/>
+                          <BsArrowRight className='cursor-pointer' />
                         </Link>
                       </div>
                     </div>
@@ -53,9 +61,9 @@ const WorkSlider = () => {
               </div>
             ))}
           </div>
-        </div>
+        </SwiperSlide>
       ))}
-    </div>
+    </Swiper>
   );
 };
 
