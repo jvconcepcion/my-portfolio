@@ -5,8 +5,9 @@ import { TypeAnimation } from 'react-type-animation';
 
 import {
   Avatar,
+  ChatPopUp,
   ParticlesContainer,
-  ProjectsBtn
+  ProjectsBtn,
 } from '@components';
 
 import { fadeIn } from '@utils/variants';
@@ -101,6 +102,7 @@ const HomeSection = () => {
     <>
       <IntroTextContainer />
       <IntroImageContainer />
+      <ChatPopUp />
     </>
   )
 }

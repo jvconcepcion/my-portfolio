@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 
 import Provider from './Provider';
 import FrozenRouter from './FrozenRouter';
+import Tooltip from './Tooltip';
 import MusicPlayer from './MusicPlayer';
 import Avatar from './Avatar';
 import Abstract from './Abstract';
@@ -27,11 +28,13 @@ import InteractiveLoader from './InteractiveLoader';
 import MapComponent from './MapComponent/page';
 import Ping from './Ping';
 import ProgressBar from './ProgressBar';
-
+import ChatPopUp from './Chat/ChatPopUp';
+import Messenger from './Chat/Messenger';
 
 export {
   Provider,
   FrozenRouter,
+  Tooltip,
   MusicPlayer,
   Avatar,
   Abstract,
@@ -57,4 +60,6 @@ export {
   Ping,
   ProgressBar,
   MapComponent,
+  ChatPopUp,
+  Messenger,
 };

@@ -1,11 +1,15 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextResponse } from "next/server";
 import nodemailer, { Transporter, SentMessageInfo } from 'nodemailer'
 import DOMPurify from 'dompurify'
 import { CustomError, CustomTransporter } from '@interfaces'
 
 // type CustomTransporter = Transporter<SentMessageInfo>;
 
-export const POST = async (req: Request, res: Response) => {
+export async function POST(req: Request) {
+  if (req.method !== 'POST') {
+    return NextResponse.json({ error: "Method not Allowed" }, { status: 500 });
+  }
+
   try {
     const { name, email, subject, message } = await req.json();
 
@@ -35,19 +39,15 @@ export const POST = async (req: Request, res: Response) => {
     // Send email
     const info = await transporter.sendMail(mailOptions);
 
-    // res.status(200).json({ success: true, messageInfo: info });
-    return new Response(
-      JSON.stringify(info),
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    )
+    return NextResponse.json(JSON.stringify(info), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   } catch (err) {
     console.error(err)
     const error = err as CustomError;
-    return new Response("Error sending email", { status: error.status });
+    return NextResponse.json("Error sending email", { status: error.status });
   }
 }

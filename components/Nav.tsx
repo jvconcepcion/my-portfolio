@@ -3,22 +3,10 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { navData } from '@utils';
+import { Tooltip } from '@components';
 import { NavDataProps } from '@interfaces';
 
-const Tooltip = ({ name = '' }) => (
-  <div className='absolute pr-14 right-0 hidden xl:group-hover:flex'>
-    <div className='bg-white relative flex text-primary items-center p-[6px] rounded-[3px]'>
-      <div className='text-[12px] leading-none font-semibold capitalize'>
-        {name}
-      </div>
-      {/* pointer/triangle */}
-      <div className='border-solid border-l-white border-l-8 border-y-transparent
-      border-y-[6px] border-r-0 absolute -right-2' />
-    </div>
-  </div>
-)
-
-const Nav = () => {
+const Nav: React.FC = () => {
   const pathname = usePathname();
 
   return (
@@ -34,7 +22,7 @@ const Nav = () => {
             key={i}
             href={path}
           >
-            <Tooltip name={name}/>
+            <Tooltip name={name} positionClass='pr-14 right-0 xl:group-hover:flex'/>
             {icon}
           </Link>))}
       </div>

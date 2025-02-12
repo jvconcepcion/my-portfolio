@@ -5,8 +5,19 @@ import { SwiperOptions } from 'swiper/types';
 import { SimpleIcon } from 'react-icon-cloud';
 import { Map } from 'leaflet';
 
-//  music player
+// api error
+interface APIError extends Error {
+  status: number;
+  data?: any;
+}
 
+// tooltip
+export interface TooltipProps {
+  name?: string;
+  positionClass?: string;
+}
+
+//  music player
 export interface Track {
   title: string;
   src: string;
@@ -17,7 +28,6 @@ export interface MusicPlayerProps {
 }
 
 // String to JSX props
-
 export interface StringToJSXProps {
   domString: string,
   styles?: CSSProperties,
@@ -25,7 +35,6 @@ export interface StringToJSXProps {
 }
 
 // simple icon types
-
 export interface SimpleIconProps {
   simpleIcons: Record<string, SimpleIcon>,
   allIcon: Record<string, {
@@ -41,6 +50,12 @@ export interface NavDataProps {
   path: string | UrlObject,
   icon: JSX.Element,
 };
+
+// messenger
+export interface MessengerProps {
+  role: 'user' | 'assistant';
+  content: string;
+}
 
 // social header types
 export interface SocialDataProps {
@@ -188,7 +203,7 @@ export interface StackListDataProps {
 
 // api data props
 
-export interface CustomError {
+export interface CustomError extends Error {
   status?: number;
   message: string;
 };
