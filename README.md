@@ -5,7 +5,7 @@ This is a personal web portfolio built using **Next.js** and **TypeScript**, des
 
 ## 🛠️ Tech Stack
 - **Framework:** Next.js (React, TypeScript)
-- **Styling:** Tailwind CSS, Framer Motion
+- **Styling:** Tailwind CSS, Framer Motion, Chakra UI
 - **UI Components & Effects:**
   - `react-icons`, `react-icon-cloud`, `react-type-animation`, `swiper`, `react-countup`, `react-tagcloud`, `react-tsparticles`
 - **Mapping:** Leaflet, react-leaflet
@@ -15,10 +15,12 @@ This is a personal web portfolio built using **Next.js** and **TypeScript**, des
 ## 📦 Dependencies
 ```json
 "dependencies": {
+  "@chakra-ui/react": "^2.10.5",
   "dompurify": "^3.0.8",
   "framer-motion": "^10.16.4",
   "jsdom": "^22.1.0",
   "leaflet": "^1.9.4",
+  "lodash": "^4.17.21",
   "net": "^1.0.2",
   "next": "latest",
   "nodemailer": "^6.9.8",
