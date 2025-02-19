@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, FormEvent } from 'react';
-import { MessengerProps } from '@interfaces';
+import { useState, useEffect, useRef, FormEvent } from 'react';
+import { MessagesProps } from '@interfaces';
+import { debounce } from 'lodash';
 import {
   MdOutlineDarkMode,
   MdDarkMode,
@@ -11,28 +12,46 @@ import {
 import Image from 'next/image';
 
 const Messenger: React.FC = () => {
-  const [messages, setMessages] = useState<MessengerProps[]>(() => JSON.parse(localStorage.getItem("chat_messages") || "[]"));
+  const [messages, setMessages] = useState<MessagesProps[]>(() => {
+    if (typeof window !== 'undefined') {
+      return JSON.parse(localStorage.getItem("chat_messages") || "[]");
+    }
+    return [];
+  });
   const [input, setInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [status, setStatus] = useState<"active" | "idle" | "offline">("offline");
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    localStorage.setItem("chat_messages", JSON.stringify(messages));
-  }, [messages]);
+  const fetchStatus = debounce(async () => {
+    try {
+      const response = await fetch("/api/chat");
+      if (!response.ok) throw new Error("Failed to fetch status");
+      const data = await response.json();
+      setStatus(data.status);
+      scrollToBottom();
+    } catch (error) {
+      setStatus("offline");
+    }
+ }, 1000);
+
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
 
   const speakText = (text: string) => {
     if ("speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(text);
       speechSynthesis.speak(utterance);
-    } else {
-      console.log("Text-to-Speech is not supported in this browser.");
     }
   };
   
   const copyText = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      console.log("Copied to clipboard!");
     } catch (err) {
       console.log("Failed to copy text.");
     }
@@ -43,7 +62,7 @@ const Messenger: React.FC = () => {
     if (!input.trim()) return;
 
     // setIsLoading(true);
-    const newMessages: MessengerProps[] = [...messages, { role: 'user', content: input }];
+    const newMessages: MessagesProps[] = [...messages, { role: 'user', content: input }];
     setMessages(newMessages);
     setInput('');
 
@@ -51,25 +70,34 @@ const Messenger: React.FC = () => {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [{ role: "user", content: input }] })
+        body: JSON.stringify({ messages: newMessages })
       });
 
       if (!response.ok) throw new Error('API error');
       const data: { reply: string } = await response.json();
 
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: data.reply
-      }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+      setStatus("idle");
     } catch (error) {
-      console.log(error)
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: "Sorry, I'm having trouble connecting. Please try again later."
-      }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I'm having trouble connecting. Please try again later." }]);
+      setStatus("offline");
     }
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    localStorage.setItem("chat_messages", JSON.stringify(messages));
+    scrollToBottom();
+  }, [messages]);
+
+  useEffect(() => {
+    const fetchData = async () => await fetchStatus();
+
+    scrollToBottom();
+    fetchData();
+    const interval = setInterval(fetchStatus, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className={`max-w-2xl mx-auto rounded-md shadow-lg transition-colors duration-300 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
@@ -78,8 +106,8 @@ const Messenger: React.FC = () => {
         <div className="flex items-center space-x-2">
           <Image src="/ai.jpg" width={32} height={32} alt="AI Assistant" className="w-8 h-8 rounded-full" />
           <div>
-            <p className={`text-sm ${darkMode ? "text-white" : "text-black"} font-semibold`}>AI Assistant</p>
-            <p className={`text-xs ${darkMode ? "text-white" : "text-black"}`}>Active now</p>
+            <p className={`text-sm ${darkMode ? "text-white" : "text-black"} font-semibold`}>Scaeva</p>
+            <p className={`text-xs ${darkMode ? "text-white" : "text-black"}`}>{status === "active" ? "Active now" : status === "idle" ? "Idle" : "Offline"}</p>
           </div>
         </div>
         <button onClick={() => setDarkMode(!darkMode)} className="p-1 rounded-full bg-transparent border border-gray-500 hover:bg-gray-500">
@@ -110,6 +138,8 @@ const Messenger: React.FC = () => {
             </div>
           </div>
         ))}
+        {/* Auto-scroll anchor */}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input Field */}

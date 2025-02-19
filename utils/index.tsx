@@ -92,7 +92,6 @@ export const aboutData: AboutDataProps[] = [
           { text: 'Framer Motion', iconID: 'framer' },
           { text: 'Vercel', iconID: 'vercel' },
           { text: 'Firebase', iconID: 'firebase' },
-          { text: 'Flutter', iconID: 'flutter' },
           { text: 'Javascript', iconID: 'javascript' },
           { text: 'Typescript', iconID: 'typescript' },
           { text: 'React', iconID: 'react' },
@@ -334,6 +333,11 @@ export const workData: WorkDataProps = {
           title: 'Metrobank Online Banking',
           path: '/mbo.jpg',
           link: 'https://onlinebanking.metrobank.com.ph/signin'
+        },
+        {
+          title: 'my-portfolio',
+          path: '/portfolio.jpg',
+          link: '/'
         }
       ],
     },

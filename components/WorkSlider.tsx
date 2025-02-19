@@ -3,14 +3,14 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/pagination';
 
+import Image from 'next/image';
+import Link from 'next/link';
 import { workData } from '@utils';
 import { WorkDataProps } from '@interfaces';
 import { BsArrowRight } from 'react-icons/bs'
-import Image from 'next/image';
-import Link from 'next/link';
-
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
+import { Skeleton, SkeletonCircle, SkeletonText } from '@chakra-ui/react'
 
 const WorkSlider = () => {
   type SlideProps = WorkDataProps["slides"][0];

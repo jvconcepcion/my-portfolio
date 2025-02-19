@@ -17,6 +17,8 @@ export interface TooltipProps {
   positionClass?: string;
 }
 
+
+
 //  music player
 export interface Track {
   title: string;
@@ -52,7 +54,7 @@ export interface NavDataProps {
 };
 
 // messenger
-export interface MessengerProps {
+export interface MessagesProps {
   role: 'user' | 'assistant';
   content: string;
 }
@@ -206,7 +208,10 @@ export interface StackListDataProps {
 export interface CustomError extends Error {
   status?: number;
   message: string;
-};
+  response?: {
+    status: number;
+  };
+}
 
 export interface CustomTransporter extends Transporter<SentMessageInfo> {}
 
