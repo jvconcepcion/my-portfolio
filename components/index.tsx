@@ -1,5 +1,3 @@
-import dynamic from 'next/dynamic';
-
 import Provider from './Provider';
 import FrozenRouter from './FrozenRouter';
 import Tooltip from './Tooltip';
@@ -30,6 +28,7 @@ import Ping from './Ping';
 import ProgressBar from './ProgressBar';
 import ChatPopUp from './Chat/ChatPopUp';
 import Messenger from './Chat/Messenger';
+import DynamicImage from './DynamicImage';
 
 export {
   Provider,
@@ -62,4 +61,5 @@ export {
   MapComponent,
   ChatPopUp,
   Messenger,
+  DynamicImage,
 };

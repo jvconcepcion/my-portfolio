@@ -3,14 +3,19 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/pagination';
 
-import Image from 'next/image';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { workData } from '@utils';
 import { WorkDataProps } from '@interfaces';
 import { BsArrowRight } from 'react-icons/bs'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { Skeleton, SkeletonCircle, SkeletonText } from '@chakra-ui/react'
+import { Spinner } from '@chakra-ui/react';
+
+const LazyImage = dynamic(() => import('./DynamicImage'), {
+  loading: () => <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />,
+  ssr: false,
+});
 
 const WorkSlider = () => {
   type SlideProps = WorkDataProps["slides"][0];
@@ -36,12 +41,7 @@ const WorkSlider = () => {
                 className='relative rounded-lg overflow-hidden flex items-center justify-center group'
               >
                 <div className='flex items-center justify-center relative overflow-hidden'>
-                  <Image
-                    src={image.path}
-                    width={500}
-                    height={300}
-                    alt=''
-                  />
+                  <LazyImage src={image.path} width={500} height={300} alt="Dynamic Image" />
                   <div className='absolute inset-0 bg-gradient-to-l from-transparent via-[#e838cc] to-[#4a22bd]
                   opacity-0 group-hover:opacity-70 transition-all duration-700' />
                   <div
