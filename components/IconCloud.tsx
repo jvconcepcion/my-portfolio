@@ -1,8 +1,8 @@
 'use client';
 
 import { useIcons } from '@utils/customHooks';
-import { IconTextCloudDataProps } from '@interfaces';
-import { Cloud, ICloud } from 'react-icon-cloud'
+import { IconCloudDataProps } from '@interfaces';
+import { Cloud, ICloud  } from 'react-icon-cloud'
 
 const cloudProps: Omit<ICloud, 'children'> = {
   containerProps: {
@@ -27,7 +27,7 @@ const cloudProps: Omit<ICloud, 'children'> = {
   }
 }
 
-const IconCloud = ({ data = ['react', 'nextdotjs', 'nodedotjs' ] }: IconTextCloudDataProps) => {
+const IconCloud = ({ data = [{ "iconID": "react", "url": "https://react.dev/" }] }: IconCloudDataProps) => {
   const icons = useIcons(data);
 
   return (

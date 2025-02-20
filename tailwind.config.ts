@@ -36,12 +36,16 @@ const config: Config = {
         site: 'url("/site-bg.svg")',
       },
       keyframes: {
+        blinker: {
+          '50%': { opacity: '0' },
+        },
         'spin-reverse': {
           from: { transform: 'rotate(360deg)' },
           to: { transform: 'rotate(0deg)' },
         },
       },
       animation: {
+        blink: 'blinker 3s linear infinite',
         'spin-reverse': 'spin-reverse 6s linear infinite',
         'spin-slow': 'spin 6s linear infinite',
       },

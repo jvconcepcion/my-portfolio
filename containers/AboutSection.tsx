@@ -57,7 +57,7 @@ const TabInfo = ({ index }: { index: number }) => {
   const info = aboutData[index].info;
   const knowledges = currentTab === 'skills'
     ? info.map(({ knowledge }) => knowledge)[0]
-      .map(({ text, iconID }: { [key: string]: string }) => iconMode ? iconID : text)
+      .map(({ value, iconID, count, color, url }: { [key: string]: string }) => iconMode ? { iconID, url } : { value, count, color, url})
     : []
 
   return (

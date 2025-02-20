@@ -174,9 +174,28 @@ export interface ContactDataProps {
 
 // Icon and Text Cloud Props
 
-export interface IconTextCloudDataProps {
-  data: string[],
+export interface IconCloudDataProps {
+  data: {
+    iconID: string;
+    url: string;
+  }[],
 };
+
+export interface TextCloudDataProps {
+  data: {
+    value: string;
+    count: number;
+    color?: string;
+    props?: any;
+  }[],
+};
+
+export interface CustomTextRendererProps {
+  value: string,
+  count?: number;
+  color?: string;
+  url?: string;
+}
 
 export interface StackListDataProps {
   data: any[],

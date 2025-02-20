@@ -1,28 +1,33 @@
 'use client';
 
-import { IconTextCloudDataProps } from '@interfaces';
-import { useEffect } from 'react';
-import TagCloud, { TagCloudOptions } from 'TagCloud';
+import Link from 'next/link';
+import { TextCloudDataProps, CustomTextRendererProps } from '@interfaces';
+import { TagCloud } from 'react-tagcloud';
 
-const TextCloud = ({ data = ['React', 'Next.JS', 'Node.JS'] }: IconTextCloudDataProps) => {
-  useEffect(() => {
-    return () => {
-      const container: any = ".tagcloud-container";
+const CustomRenderer: React.FC<CustomTextRendererProps> = ({ value = 'BEM', color, url = '/' }) => (
+  <Link key={value} href={url} target="_blank" passHref rel="noopener noreferrer">
+    <span
+      className="inline-block border-2 m-1 p-1 text-white animate-blink cursor-pointer"
+      style={{
+        animationDelay: `${Math.random() * 2}s`,
+        borderColor: color,
+      }}
+    >
+      {value}
+    </span>
+  </Link>
+);
 
-      const options: TagCloudOptions = {
-        radius: 150,
-        maxSpeed: "normal",
-        initSpeed: "normal",
-        keep: true,
-      };
+const TextCloud = ({ data = [{ value: 'React', count: 30 }] }: TextCloudDataProps) => {
 
-      TagCloud(container, data, options);
-    };
-  }, []);
   return (
-    <div className='text-sphere'>
-      {/* span tag className must be "tagcloud"  */}
-      <span className='tagcloud-container'></span>
+    <div className='text-sphere mt-5'>
+      <TagCloud
+        minSize={1}
+        maxSize={5}
+        tags={data}
+        renderer={CustomRenderer}
+      />
     </div>
   )
 };
