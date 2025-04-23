@@ -214,8 +214,8 @@ export const aboutData: AboutDataProps[] = [
         }
       },
       {
-        company: 'Metrobank',
-        stage: '09/2022 - Current',
+        company: 'Vertere Global INC. - Metrobank (Client)',
+        stage: '09/2022 - 03/2025',
         location: '25th floor, 8th Avenue corner 36th Street, Bonifacio Global City, Taguig',
         occupations: [
           {
@@ -335,9 +335,14 @@ export const workData: WorkDataProps = {
           link: 'https://onlinebanking.metrobank.com.ph/signin'
         },
         {
-          title: 'my-portfolio',
+          title: 'My Portfolio',
           path: '/portfolio.jpg',
-          link: '/'
+          link: 'https://my-portfolio-jonathan-vidad-concepcions-projects.vercel.app'
+        },
+        {
+          title: 'Classpass Clone',
+          path: '/proj-classpass-clone.jpg',
+          link: 'https://my-class-pass.vercel.app'
         }
       ],
     },

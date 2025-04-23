@@ -107,7 +107,8 @@ const Messenger: React.FC = () => {
           <Image src="/ai.jpg" width={32} height={32} alt="AI Assistant" className="w-8 h-8 rounded-full" />
           <div>
             <p className={`text-sm ${darkMode ? "text-white" : "text-black"} font-semibold`}>Scaeva</p>
-            <p className={`text-xs ${darkMode ? "text-white" : "text-black"}`}>{status === "active" ? "Active now" : status === "idle" ? "Idle" : "Offline"}</p>
+            {/* Temporarily hidden due to some issue */}
+            {/* <p className={`text-xs ${darkMode ? "text-white" : "text-black"}`}>{status === "active" ? "Active now" : status === "idle" ? "Idle" : "Offline"}</p> */}
           </div>
         </div>
         <button onClick={() => setDarkMode(!darkMode)} className="p-1 rounded-full bg-transparent border border-gray-500 hover:bg-gray-500">

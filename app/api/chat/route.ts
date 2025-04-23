@@ -8,14 +8,14 @@ const openai = new OpenAI({
 
 let lastActivity = Date.now(); // Track AI activity time
 
-// 📝 Scaeva's Resume Content (Your Portfolio Info)
+// Scaeva's Resume Content (My Portfolio Info)
 const resumeContent = `
 Nathan (Jonathan) - Full Stack Web & Mobile Developer
-Current Role: Application Developer at Metrobank
+Current Role: Web Developer/Programmer Analyst S3 at Metrobank (client)
 Experience:
 - Full-stack development for Metrobank's Mobile App (MBOA) & Command Center web app
 - Expertise in Next.js, React.js, Node.js
-- Basic experience with AWS/GCP cloud integration
+- Deep knowledge with multiple UI Frameworks such as Material UI, Chakra UI and Mantine UI
 - Security-conscious, experienced in API integrations and system monitoring
 Skills: JavaScript, TypeScript, React, Flutter, TailwindCSS, Keycloak, LoopBack, SQL, MongoDB
 Certifications: Advanced Web Development, Cybersecurity Foundations
@@ -28,14 +28,14 @@ export async function POST(req: Request) {
     const { messages } = await req.json();
     const userMessage = messages[messages.length - 1]?.content?.toLowerCase() || "";
 
-    // 🎯 Detect Greetings and Provide an Intro Instead
+    // Detect Greetings and Provide an Intro Instead
     if (/^(hi|hello|hey|good\s(morning|afternoon|evening))$/.test(userMessage)) {
       const reply = `
       Hello! I’m **Scaeva**, Nathan’s AI assistant. 
       If you're here to learn about him, he is a **full-stack web & mobile developer at Metrobank**. 
-      🚀 He specializes in **Next.js, Flutter, Node.js, and blockchain**. 
-      💡 He has experience in **banking software, cloud computing (AWS, GCP), and cybersecurity**.
-      📌 Feel free to ask about his **projects, skills, or experience**!
+      He specializes in **Next.js, Flutter, Node.js, and blockchain**. 
+      He Deep knowledge with multiple UI Frameworks such as **Material UI, Chakra UI and Mantine UI**.
+      Feel free to ask about his **projects, skills, or experience**!
       `;
       return NextResponse.json({ reply });
     }
