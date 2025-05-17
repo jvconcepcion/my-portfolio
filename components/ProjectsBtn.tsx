@@ -12,7 +12,6 @@ const ProjectsBtn = () => {
   };
 
   const handleDownload = () => {
-    // Path to your CV file
     const cvPath = '/cv.pdf';
     const link = document.createElement('a');
     link.href = cvPath;

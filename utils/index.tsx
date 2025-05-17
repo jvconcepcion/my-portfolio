@@ -106,6 +106,7 @@ export const aboutData: AboutDataProps[] = [
           { value: 'Jira', iconID: 'jira', count: 18, color: '#0052CC', url: 'https://www.atlassian.com/software/jira' },
           { value: 'MongoDB', iconID: 'mongodb', count: 22, color: '#47A248', url: 'https://www.mongodb.com/' },
           { value: 'Nginx', iconID: 'nginx', count: 17, color: '#009639', url: 'https://nginx.org/' },
+          { value: 'GraphQL', iconID: 'graphql', count: 18, color: '#F6009B', url: 'https://graphql.org/' },
         ]            
       },
     ],
@@ -282,7 +283,7 @@ export const serviceData: ServicesDataProps[] = [
   {
     icon: <RxDesktop />,
     title: 'Development',
-    description: 'Transform your ideas into responsive, high-performance web applications using the latest technologies like React JS, Next JS, and Node.js.\n\nI ensure seamless integration and robust backend solutions with LoopBack 4 and MongoDB.',
+    description: 'Transform your ideas into responsive, high-performance web applications using the latest technologies like React JS, Next JS, Node.js, LoopBack 4 and MongoDB.',
   },
   {
     icon: <RxPencil2 />,
