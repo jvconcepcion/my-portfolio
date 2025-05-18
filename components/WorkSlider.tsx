@@ -33,15 +33,29 @@ const WorkSlider = () => {
       {workData.slides.map((item: SlideProps, i: number) => (
         <SwiperSlide key={i}>
           <div
-            className='grid grid-cols-2 grid-rows-2 gap-4'
+            className={`grid ${item.images.length === 1
+              ? 'grid-cols-1'
+              : item.images.length === 2
+                ? 'gap-4 grid-cols-1 sm:grid-cols-2'
+                : 'gap-4 grid-cols-1 sm:grid-cols-2 grid-rows-2'
+              }`}
           >
             {item.images.map((image: ImageProps, imageIndex: number) => (
               <div
                 key={imageIndex}
-                className='relative rounded-lg overflow-hidden flex items-center justify-center group'
+                className={`relative rounded-lg overflow-hidden flex items-center justify-center group ${item.images.length === 1 ? 'col-span-2 row-span-2 w-full h-full' : ''
+                  }`}
               >
-                <div className='flex items-center justify-center relative overflow-hidden'>
-                  <LazyImage src={image.path} width={500} height={300} alt="Dynamic Image" />
+                <div className="flex items-center justify-center relative overflow-hidden w-full h-full">
+                  <LazyImage
+                    src={image.path}
+                    alt="Dynamic Image"
+                    width={item.images.length === 1 ? 1920 : 500}
+                    height={item.images.length === 1 ? 1080 : 300}
+                    className={`transition-all duration-300 ${
+                      item.images.length === 1 ? 'w-full h-full object-cover' : ''
+                    }`}
+                  />
                   <div className='absolute inset-0 bg-gradient-to-l from-transparent via-[#e838cc] to-[#4a22bd]
                   opacity-0 group-hover:opacity-70 transition-all duration-700' />
                   <div
