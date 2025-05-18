@@ -347,5 +347,14 @@ export const workData: WorkDataProps = {
         }
       ],
     },
+    {
+      images: [
+        {
+          title: 'NovaVision',
+          path: '/proj-nova-vission.jpg',
+          link: 'https://nova-vision.vercel.app'
+        },
+      ],
+    },
   ],
 };
