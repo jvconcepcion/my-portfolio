@@ -354,6 +354,11 @@ export const workData: WorkDataProps = {
           path: '/proj-nova-vission.jpg',
           link: 'https://nova-vision.vercel.app'
         },
+        {
+          title: 'Ai Image Generator',
+          path: '/proj-ai-image-gen.jpg',
+          link: 'https://github.com/jvconcepcion/ai-image-generator'
+        },
       ],
     },
   ],

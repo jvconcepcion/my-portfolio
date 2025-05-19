@@ -33,7 +33,7 @@ const WorkSlider = () => {
       {workData.slides.map((item: SlideProps, i: number) => (
         <SwiperSlide key={i}>
           <div
-            className={`grid ${item.images.length === 1
+            className={`grid items-center ${item.images.length === 1
               ? 'grid-cols-1'
               : item.images.length === 2
                 ? 'gap-4 grid-cols-1 sm:grid-cols-2'
