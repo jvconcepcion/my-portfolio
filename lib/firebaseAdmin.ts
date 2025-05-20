@@ -1,14 +1,18 @@
 import * as admin from 'firebase-admin';
 
-// Only initialize if it hasn't been initialized already
 if (!admin.apps.length) {
+  const serviceAccountJson = process.env.FIREBASE_ENCODED_ACCOUNT;
+
+  if (!serviceAccountJson) {
+    throw new Error("Missing FIREBASE_ENCODED_ACCOUNT in environment variables");
+  }
+
+  const serviceAccount = JSON.parse(
+    Buffer.from(serviceAccountJson, 'base64').toString('utf8')
+  );
+
   admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      // Replace escaped newlines with actual newlines
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    }),
+    credential: admin.credential.cert(serviceAccount),
   });
 }
 

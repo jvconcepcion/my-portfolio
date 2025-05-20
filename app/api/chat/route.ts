@@ -1,11 +1,15 @@
 import OpenAI from 'openai';
 import { NextResponse } from 'next/server';
 import { CustomError } from '@interfaces';
+import { decryptEnvSecret } from '@lib/decrypt';
 import { getResumeContent, getAIGreetings } from '@lib/settings';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+const apiKey = decryptEnvSecret(
+  process.env.OPENAI_KEY_ENCRYPTED!,
+  process.env.OPENAI_KEY_PASSWORD!
+);
+
+const openai = new OpenAI({ apiKey });
 
 let lastActivity = Date.now(); // Track AI activity time
 
