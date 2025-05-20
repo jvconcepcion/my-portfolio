@@ -12,6 +12,7 @@
     "@chakra-ui/react": "^2.10.5",
     "clsx": "^2.1.1",
     "dompurify": "^3.0.8",
+    "firebase-admin": "^13.4.0",
     "framer-motion": "^10.16.4",
     "jsdom": "^22.1.0",
     "leaflet": "^1.9.4",
