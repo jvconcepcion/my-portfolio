@@ -161,7 +161,8 @@ export interface WorkDataProps {
     images: {
       title: string,
       path: string,
-      link: string,
+      siteLink: string,
+      gitLink: string,
     }[];
   }[];
 };

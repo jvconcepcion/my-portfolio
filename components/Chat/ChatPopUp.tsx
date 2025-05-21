@@ -63,7 +63,7 @@ const ChatPopUp: React.FC = () => {
 
         {/* Chat Button */}
         <motion.button
-          className="fixed bottom-[7rem] right-8 lg:right-10 z-[100] rounded-full p-4 text-4xl group hover:text-accent"
+          className="fixed bottom-[6rem] right-5 lg:right-10 z-[100] rounded-full p-4 text-4xl group hover:text-accent"
           onClick={toggleChat}
           variants={mainButton}
           initial="closed"

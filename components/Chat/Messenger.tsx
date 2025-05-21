@@ -20,7 +20,8 @@ const Messenger: React.FC = () => {
   });
   const [input, setInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [isAssistantTyping, setIsAssistantTyping] = useState<boolean>(false);
   const [status, setStatus] = useState<'active' | 'idle' | 'offline'>('offline');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -62,6 +63,7 @@ const Messenger: React.FC = () => {
     if (!input.trim()) return;
 
     // setIsLoading(true);
+    setIsAssistantTyping(true);
     const newMessages: MessagesProps[] = [...messages, { role: 'user', content: input }];
     setMessages(newMessages);
     setInput('');
@@ -77,9 +79,11 @@ const Messenger: React.FC = () => {
       const data: { reply: string } = await response.json();
 
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
-      setStatus('idle');
+      setIsAssistantTyping(false);
+      // setStatus('idle');
     } catch (error) {
       setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I'm having trouble connecting. Please try again later." }]);
+      setIsAssistantTyping(false);
       setStatus('offline');
     }
     setIsLoading(false);
@@ -98,6 +102,7 @@ const Messenger: React.FC = () => {
 
     // Only trigger greeting on first load if no messages are saved
     if (messages.length === 0) {
+      setIsAssistantTyping(true);
       (async () => {
         try {
           const response = await fetch('/api/chat', {
@@ -116,10 +121,12 @@ const Messenger: React.FC = () => {
           setMessages([
             { role: 'assistant', content: 'Failed to load greeting. Try refreshing.' }
           ]);
+        } finally {
+          setIsAssistantTyping(false);
         }
       })();
     }
-    
+
     const interval = setInterval(fetchStatus, 10000);
     return () => clearInterval(interval);
   }, []);
@@ -134,6 +141,7 @@ const Messenger: React.FC = () => {
             <p className={`text-sm ${darkMode ? 'text-white' : 'text-black'} font-semibold`}>Scaeva</p>
             {/* Temporarily hidden due to some issue */}
             {/* <p className={`text-xs ${darkMode ? 'text-white' : 'text-black'}`}>{status === 'active' ? 'Active now' : status === 'idle' ? 'Idle' : 'Offline'}</p> */}
+            <p className={`text-xs ${darkMode ? 'text-white' : 'text-black'}`}>Active now</p>
           </div>
         </div>
         <button onClick={() => setDarkMode(!darkMode)} className='p-1 rounded-full bg-transparent border border-gray-500 hover:bg-gray-500'>
@@ -164,6 +172,13 @@ const Messenger: React.FC = () => {
             </div>
           </div>
         ))}
+        {isAssistantTyping && (
+          <div className="flex items-start">
+            <div className={`text-xs italic animate-pulse px-3 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-600'}`}>
+              Scaeva is typing<span className="animate-ping ml-1">...</span>
+            </div>
+          </div>
+        )}
         {/* Auto-scroll anchor */}
         <div ref={messagesEndRef} />
       </div>

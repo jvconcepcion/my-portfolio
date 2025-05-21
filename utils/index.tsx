@@ -304,22 +304,26 @@ export const workData: WorkDataProps = {
         {
           title: 'Weather Forecast',
           path: '/proj-weather-forcecast.jpg',
-          link: 'https://github.com/jvconcepcion/weather-forecast'
+          siteLink: 'https://github.com/jvconcepcion/weather-forecast',
+          gitLink: 'https://github.com/jvconcepcion/weather-forecast'
         },
         {
           title: 'Meme Generator',
           path: '/proj-meme.jpg',
-          link: 'https://github.com/jvconcepcion/meme-generator'
+          siteLink: 'https://github.com/jvconcepcion/meme-generator',
+          gitLink: 'https://github.com/jvconcepcion/meme-generator'
         },
         {
           title: 'Rappler',
           path: '/proj-rappler.jpg',
-          link: 'https://www.rappler.com'
+          siteLink: 'https://www.rappler.com',
+          gitLink: ''
         },
         {
           title: 'Rappler Election 2022',
           path: '/proj-rappler-election.jpg',
-          link: 'https://ph.rappler.com'
+          siteLink: 'https://ph.rappler.com',
+          gitLink: ''
         }
       ],
     },
@@ -328,22 +332,26 @@ export const workData: WorkDataProps = {
         {
           title: 'Metrobank Command Center',
           path: '/mbcc.jpg',
-          link: 'https://onlinebanking.metrobank.com.ph/signin'
+          siteLink: 'https://onlinebanking.metrobank.com.ph/signin',
+          gitLink: ''
         },
         {
           title: 'Metrobank Online Banking',
           path: '/mbo.jpg',
-          link: 'https://onlinebanking.metrobank.com.ph/signin'
+          siteLink: 'https://onlinebanking.metrobank.com.ph/signin',
+          gitLink: ''
         },
         {
           title: 'My Portfolio',
           path: '/portfolio.jpg',
-          link: 'https://my-portfolio-jonathan-vidad-concepcions-projects.vercel.app'
+          siteLink: 'https://my-portfolio-jonathan-vidad-concepcions-projects.vercel.app',
+          gitLink: 'https://github.com/jvconcepcion/my-portfolio'
         },
         {
           title: 'Classpass Clone',
           path: '/proj-classpass-clone.jpg',
-          link: 'https://my-class-pass.vercel.app'
+          siteLink: 'https://my-class-pass.vercel.app',
+          gitLink: 'https://github.com/jvconcepcion/my-class-pass'
         }
       ],
     },
@@ -352,12 +360,14 @@ export const workData: WorkDataProps = {
         {
           title: 'NovaVision',
           path: '/proj-nova-vission.jpg',
-          link: 'https://nova-vision.vercel.app'
+          siteLink: 'https://nova-vision.vercel.app',
+          gitLink: 'https://github.com/jvconcepcion/nova-vision'
         },
         {
           title: 'Ai Image Generator',
           path: '/proj-ai-image-gen.jpg',
-          link: 'https://github.com/jvconcepcion/ai-image-generator'
+          siteLink: 'https://github.com/jvconcepcion/ai-image-generator',
+          gitLink: 'https://github.com/jvconcepcion/ai-image-generator'
         },
       ],
     },

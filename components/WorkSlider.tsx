@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import { workData } from '@utils';
 import { WorkDataProps } from '@interfaces';
 import { BsArrowRight } from 'react-icons/bs'
+import { VscGithub } from "react-icons/vsc";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { Spinner } from '@chakra-ui/react';
@@ -36,8 +37,8 @@ const WorkSlider = () => {
             className={`grid items-center ${item.images.length === 1
               ? 'grid-cols-1'
               : item.images.length === 2
-                ? 'gap-4 grid-cols-1 sm:grid-cols-2'
-                : 'gap-4 grid-cols-1 sm:grid-cols-2 grid-rows-2'
+                ? 'gap-4 grid-cols-2 grid-rows-1'
+                : 'gap-4 grid-cols-2 grid-rows-2'
               }`}
           >
             {item.images.map((image: ImageProps, imageIndex: number) => (
@@ -52,21 +53,29 @@ const WorkSlider = () => {
                     alt="Dynamic Image"
                     width={item.images.length === 1 ? 1920 : 500}
                     height={item.images.length === 1 ? 1080 : 300}
-                    className={`transition-all duration-300 ${
-                      item.images.length === 1 ? 'w-full h-full object-cover' : ''
-                    }`}
+                    className={`transition-all duration-300 ${item.images.length === 1 ? 'w-full h-full object-cover' : ''
+                      }`}
                   />
-                  <div className='absolute inset-0 bg-gradient-to-l from-transparent via-[#e838cc] to-[#4a22bd]
-                  opacity-0 group-hover:opacity-70 transition-all duration-700' />
+                  {image.gitLink !== '' && (
+                    <div className='absolute top-1 right-1 md:top-4 md:right-4 z-10 md:opacity-0 scale-95 md:group-hover:opacity-100 md:group-hover:scale-100 transition-all duration-300 ease-in-out'>
+                      <div className='bg-white/70 rounded-full'>
+                        <Link href={image.gitLink} target="_blank" passHref rel="noopener noreferrer">
+                          <VscGithub className="w-[1.6em] h-[1.6em] md:w-[2.2em] md:h-[2.2em] cursor-pointer text-[#131424]" />
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                  <div className='absolute inset-0 bg-gradient-to-r from-transparent via-[#e838cc] to-[#4a22bd]
+                  opacity-0 group-hover:opacity-80 transition-all duration-700' />
                   <div
                     className='absolute bottom-0 translate-y-full group-hover:-translate-y-10 group-hover:xl:-translate-y-20
                     transition-all duration-300'
                   >
                     <div className='flex items-center gap-x-2 text-xs xs:text-[10px] sm:text-[13px] tracking-[0.2em]'>
-                      <div className='delay-100'>{image.title}</div>
+                      <div className='delay-100 hidden md:block'>{image.title}</div>
                       <div className='delay-100'>
-                        <Link href={image.link} target="_blank" passHref rel="noopener noreferrer">
-                          <BsArrowRight className='cursor-pointer' />
+                        <Link href={image.siteLink} target="_blank" passHref rel="noopener noreferrer">
+                          <BsArrowRight className='cursor-pointer w-6 h-6' />
                         </Link>
                       </div>
                     </div>
