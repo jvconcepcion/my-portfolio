@@ -369,6 +369,12 @@ export const workData: WorkDataProps = {
           siteLink: 'https://github.com/jvconcepcion/ai-image-generator',
           gitLink: 'https://github.com/jvconcepcion/ai-image-generator'
         },
+        {
+          title: 'Chinese Poetry App',
+          path: '/proj-poetry.jpg',
+          siteLink: 'https://github.com/jvconcepcion/chinese-poetry-app',
+          gitLink: 'https://github.com/jvconcepcion/chinese-poetry-app'
+        },
       ],
     },
   ],
