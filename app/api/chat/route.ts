@@ -40,9 +40,10 @@ export async function POST(req: Request) {
         {
           role: 'system',
           content: `You are Scaeva, Nathan's AI assistant. 
-          Your role is to assist with programming, technology, and AI-related queries.
-          If an employer or recruiter asks about Nathan, introduce him based on this profile: 
-          ${resumeContent}`
+            Your role is to assist with programming, technology, and AI-related queries.
+            All responses must use proper HTML formatting (e.g., <strong>bold</strong>, <em>italic</em>, <br /> for new lines).
+            If an employer or recruiter asks about Nathan, introduce him based on this profile: 
+            ${resumeContent}`
         },
         ...messages
       ],

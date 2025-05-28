@@ -157,8 +157,11 @@ const Messenger: React.FC = () => {
             className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
           >
             {/* Chat Bubble */}
-            <div className={`text-xs p-3 rounded-md ${msg.role === 'user' ? 'bg-blue-500 text-white max-w-[80%]' : darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-800'} relative max-w-[80%]`}>
-              {msg.content}
+            <div 
+              className={`text-xs p-3 rounded-md ${msg.role === 'user' ? 'bg-blue-500 text-white max-w-[80%]' : darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-800'} relative max-w-[80%]`}
+              dangerouslySetInnerHTML={msg.role === 'assistant' ? { __html: msg.content } : undefined}
+            >
+              {msg.role === 'user' ? msg.content : null}
             </div>
 
             {/* Icons - Positioned below the message */}
