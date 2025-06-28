@@ -66,6 +66,12 @@ export interface SocialDataProps {
   icon: JSX.Element,
 };
 
+// homepage props
+export interface HomePageProps {
+  cvLink?: string;
+  apiKey?: string;
+};
+
 // about types
 export interface AboutDataProps {
   title: string,
@@ -234,4 +240,8 @@ export interface CustomError extends Error {
 }
 
 export interface CustomTransporter extends Transporter<SentMessageInfo> {}
+
+export type ContentType = 'chat-content' | 'about';
+
+export type DocumentID = 'resumeContent' | 'greetings' | 'cv';
 

@@ -1,7 +1,9 @@
 'use client';
 
+import useSWR from 'swr';
 import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
+import { GetStaticProps } from 'next';
 
 import {
   Avatar,
@@ -11,8 +13,20 @@ import {
 } from '@components';
 
 import { fadeIn } from '@utils/variants';
+import { HomePageProps } from '@interfaces';
+import { decrypt } from '@lib/decrypt';
+import { getCVLink } from '@lib/settings';
 
-const IntroTextContainer = () => (
+export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
+  const cvLink = await getCVLink();
+
+  return {
+    props: { cvLink },
+    revalidate: 1000,
+  }
+}
+
+const IntroTextContainer: React.FC = () => (
   <div className='w-full h-full bg-gradient-to-r from-black/10 via-black/20
       to-black/40'>
     <div className='text-center flex flex-col justify-center xl:pt-40 xl:text-left
@@ -74,7 +88,7 @@ const IntroTextContainer = () => (
   </div>
 );
 
-const IntroImageContainer = () => (
+const IntroImageContainer: React.FC = () => (
   <div className='w-[1200px] h-full absolute right-0 bottom-0 bg-gradient-to-r from-primary/10
   to-black/10'>
     {/* background image */}
@@ -97,7 +111,19 @@ const IntroImageContainer = () => (
   </div>
 )
 
-const HomeSection = () => {
+const HomeSection = ({ cvLink }: HomePageProps) => {
+  const serviceAccountClient = process.env.NEXT_PUBLIC_FIREBASE_ENCRYPTED_KEY;
+  
+  if (!serviceAccountClient) {
+    throw new Error("Missing FIREBASE ENCRYPTED KEY in environment variables");
+  }
+
+  const serviceAccount = JSON.parse(
+    Buffer.from(serviceAccountClient, 'base64').toString('utf8')
+  );
+
+  console.log(serviceAccount)
+
   return (
     <>
       <IntroTextContainer />

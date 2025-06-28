@@ -1,40 +1,45 @@
 import OpenAI from 'openai';
 import { NextResponse } from 'next/server';
 import { CustomError } from '@interfaces';
-import { decryptEnvSecret } from '@lib/decrypt';
+import { decrypt } from '@lib/decrypt';
 import { getResumeContent, getAIGreetings } from '@lib/settings';
 
-const apiKey = decryptEnvSecret(
-  process.env.OPENAI_KEY_ENCRYPTED!,
-  process.env.OPENAI_KEY_PASSWORD!
-);
+// Initialize OpenAI only once (singleton pattern)
+let openai: OpenAI;
 
-const openai = new OpenAI({ apiKey });
+async function initializeOpenAI() {
+  if (!openai) {
+    const apiKey = await decrypt(
+      process.env.OPENAI_KEY_ENCRYPTED!,
+      process.env.OPENAI_KEY_PASSWORD!
+    );
+    openai = new OpenAI({ apiKey });
+  }
+  return openai;
+}
 
-let lastActivity = Date.now(); // Track AI activity time
+let lastActivity = Date.now();
 
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
     const userMessage = messages[messages.length - 1]?.content?.toLowerCase() || '';
 
-    // Scaeva's Resume Content (My Portfolio Info) stored from firestore
-    const resumeContent = await getResumeContent();
+    // Preload data in parallel
+    const [resumeContent, greetings, openaiInstance] = await Promise.all([
+      getResumeContent(),
+      getAIGreetings(),
+      initializeOpenAI()
+    ]);
 
-    // Handle Chat UI Initial Launch Trigger
-    if (userMessage === '__init__') {
-      const reply = await getAIGreetings();
-      return NextResponse.json({ reply });
+    // Handle special cases
+    if (userMessage === '__init__' || /^(hi|hello|hey|good\s(morning|afternoon|evening))$/.test(userMessage)) {
+      lastActivity = Date.now();
+      return NextResponse.json({ reply: greetings });
     }
 
-    // Detect Greetings stored from firestore and Provide an Intro Instead
-    if (/^(hi|hello|hey|good\s(morning|afternoon|evening))$/.test(userMessage)) {
-      const reply = await getAIGreetings();
-      return NextResponse.json({ reply });
-    }
-
-    // 🌟 If Not a Greeting, Use OpenAI for Responses
-    const response = await openai.chat.completions.create({
+    // AI Response
+    const response = await openaiInstance.chat.completions.create({
       model: 'gpt-4o',
       messages: [
         {
@@ -47,32 +52,35 @@ export async function POST(req: Request) {
         },
         ...messages
       ],
-      temperature: 0.3
+      temperature: 0.3,
+      max_tokens: 500
     });
 
-    const reply = response.choices?.[0]?.message?.content ?? "I'm unable to respond at the moment.";
+    lastActivity = Date.now();
+    const reply = response.choices?.[0]?.message?.content || "I'm unable to respond at the moment.";
     return NextResponse.json({ reply });
 
   } catch (e: unknown) {
-    console.error('Error:', e);
+    console.error('AI Error:', e);
 
     const error = e as CustomError;
-    if (error?.response?.status === 402) {
+    if (error?.status === 402 || error?.response?.status === 402) {
       return NextResponse.json(
         { error: 'Insufficient API balance. Please check your OpenAI account.' },
         { status: 402 }
       );
     }
 
-    return NextResponse.json({ error: 'AI request failed' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'AI request failed', details: error.message || 'Unknown error' },
+      { status: 500 }
+    );
   }
 }
 
-// 🌐 GET API - AI Status
 export async function GET() {
   const now = Date.now();
   const elapsed = now - lastActivity;
   const status = elapsed < 30000 ? 'active' : elapsed < 60000 ? 'idle' : 'offline';
-
-  return NextResponse.json({ status });
+  return NextResponse.json({ status, lastActivity: new Date(lastActivity).toISOString() });
 }

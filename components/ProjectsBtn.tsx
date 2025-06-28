@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { MouseEvent } from 'react';
 
-const ProjectsBtn = () => {
+const ProjectsBtn: React.FC = () => {
   const router = useRouter();
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
@@ -12,10 +12,10 @@ const ProjectsBtn = () => {
   };
 
   const handleDownload = () => {
-    const cvPath = '/cv.pdf';
+    const cvPath = 'https://drive.google.com/uc?export=download&id=1Z3gUwQKL9wv-xopPWxZclGxN9hcSn3DY';
     const link = document.createElement('a');
     link.href = cvPath;
-    link.download = 'CV.pdf';
+    link.download = 'Jonathan-Concepcion-CV.pdf';
     link.click();
   };
 
