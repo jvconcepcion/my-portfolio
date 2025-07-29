@@ -9,6 +9,7 @@ import {
   MdRecordVoiceOver,
   MdContentCopy
 } from 'react-icons/md';
+import { BsSendFill, BsSendSlashFill } from "react-icons/bs";
 import Image from 'next/image';
 
 const Messenger: React.FC = () => {
@@ -20,7 +21,7 @@ const Messenger: React.FC = () => {
   });
   const [input, setInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [darkMode, setDarkMode] = useState<boolean>(true);
   const [isAssistantTyping, setIsAssistantTyping] = useState<boolean>(false);
   const [status, setStatus] = useState<'active' | 'idle' | 'offline'>('offline');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -132,16 +133,13 @@ const Messenger: React.FC = () => {
   }, []);
 
   return (
-    <div className={`max-w-2xl mx-auto rounded-md shadow-lg transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+    <div className={`max-w-2xl mx-auto rounded-md shadow-lg transition-colors duration-300 ${darkMode ? 'bg-gray-800 text-white' : 'bg-gray-300 text-black'} glow-blue`}>
       {/* Header */}
-      <div className={`flex items-center justify-between p-2 rounded-t-md ${darkMode ? 'bg-black/80' : 'bg-gray-300'}`}>
+      <div className={`flex items-center justify-between p-2 rounded-t-md ${darkMode ? 'bg-gray-800' : 'bg-gray-300'}`}>
         <div className='flex items-center space-x-2'>
           <Image src='/ai.jpg' width={32} height={32} alt='AI Assistant' className='w-8 h-8 rounded-full' />
           <div>
             <p className={`text-sm ${darkMode ? 'text-white' : 'text-black'} font-semibold`}>Scaeva</p>
-            {/* Temporarily hidden due to some issue */}
-            {/* <p className={`text-xs ${darkMode ? 'text-white' : 'text-black'}`}>{status === 'active' ? 'Active now' : status === 'idle' ? 'Idle' : 'Offline'}</p> */}
-            <p className={`text-xs ${darkMode ? 'text-white' : 'text-black'}`}>Active now</p>
           </div>
         </div>
         <button onClick={() => setDarkMode(!darkMode)} className='p-1 rounded-full bg-transparent border border-gray-500 hover:bg-gray-500'>
@@ -150,7 +148,12 @@ const Messenger: React.FC = () => {
       </div>
 
       {/* Chat Messages */}
-      <div className={`h-96 overflow-y-auto space-y-4 p-4 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+      <div 
+        className={`max-h-96 overflow-y-auto space-y-4 p-4 pb-0 ${darkMode ? 'bg-gray-800' : 'bg-gray-300'} scrollbar-thin`}
+        style={{
+          scrollbarColor: `${darkMode ? '#374151' : '#374151'} transparent`,
+        }}
+      >
         {messages.map((msg: any, index: number) => (
           <div
             key={index}
@@ -158,7 +161,7 @@ const Messenger: React.FC = () => {
           >
             {/* Chat Bubble */}
             <div 
-              className={`text-xs p-3 rounded-md ${msg.role === 'user' ? 'bg-blue-500 text-white max-w-[80%]' : darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-800'} relative max-w-[80%]`}
+              className={`text-[10px] xs:text-xs p-3 rounded-md ${msg.role === 'user' ? 'bg-blue-500 text-white max-w-[80%]' : darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-800'} relative max-w-[80%]`}
               dangerouslySetInnerHTML={msg.role === 'assistant' ? { __html: msg.content } : undefined}
             >
               {msg.role === 'user' ? msg.content : null}
@@ -175,6 +178,7 @@ const Messenger: React.FC = () => {
             </div>
           </div>
         ))}
+
         {isAssistantTyping && (
           <div className="flex items-start">
             <div className={`text-xs italic animate-pulse px-3 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-600'}`}>
@@ -183,20 +187,57 @@ const Messenger: React.FC = () => {
           </div>
         )}
         {/* Auto-scroll anchor */}
-        <div ref={messagesEndRef} />
+        <span ref={messagesEndRef}/>
       </div>
 
+      {/* Suggestion bubbles for first-time users */}
+      {messages.length === 1 && (
+        <div className="flex flex-col gap-2 mt-4 px-4">
+          {[
+            "Who is Jonathan?",
+            "Provide a full list of his work experience.",
+            "Highlight his skills."
+          ].map((suggestion, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => {
+                setInput(suggestion);
+                setTimeout(() => {
+                  document.getElementById('messenger-form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                }, 0);
+              }}
+              className={`self-end px-4 py-2 rounded-md text-xs shadow hover:bg-blue-200 transition
+                ${darkMode
+                  ? 'bg-[#2e373d] text-gray-200 hover:bg-[#2e374d]'
+                  : 'bg-blue-100 text-gray-800'}
+              `}
+            >
+              {suggestion}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Input Field */}
-      <form onSubmit={handleSubmit} className={`flex gap-2 p-4 ${darkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+      <form 
+        id="messenger-form"
+        onSubmit={handleSubmit} 
+        className={`flex gap-2 p-4 ${darkMode ? 'bg-gray-800' : 'bg-gray-300'}`}
+      >
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder='Ask about my experience...'
+          placeholder='Ask Scaeva'
           disabled={isLoading}
           className={`flex-1 p-2 border rounded-md focus:outline-none placeholder:text-sm text-xs xs:text-[16px] ${darkMode ? 'bg-gray-800 text-white border-gray-700 focus:ring-gray-500' : 'bg-white text-black border-gray-300 focus:ring-blue-500'}`}
         />
-        <button type='submit' disabled={isLoading} className='px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'>
-          Send
+        <button
+          type='submit'
+          disabled={isLoading || input.trim() === ""}
+          className='px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+        >
+          {input !== "" ? <BsSendFill /> : <BsSendSlashFill />}
         </button>
       </form>
     </div>

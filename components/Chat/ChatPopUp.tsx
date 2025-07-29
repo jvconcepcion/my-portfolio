@@ -54,7 +54,7 @@ const ChatPopUp: React.FC = () => {
               animate={{ opacity: 1, scaleY: 1 }}
               exit={{ opacity: 0, scaleY: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="absolute bottom-[3rem] right-0 mb-2 w-[320px] max-w-xs origin-bottom"
+              className="absolute bottom-[1rem] xs:bottom-[3rem] right-0 mb-2 w-[85vw] md:w-[28rem] origin-bottom"
               style={{ transformOrigin: "bottom" }}>
               <Messenger />
             </motion.div>
@@ -63,7 +63,7 @@ const ChatPopUp: React.FC = () => {
 
         {/* Chat Button */}
         <motion.button
-          className="fixed bottom-[6rem] right-5 lg:right-10 z-[100] rounded-full p-4 text-4xl group hover:text-accent"
+          className="fixed bottom-[5rem] xs:bottom-[6rem] right-5 lg:right-10 z-[100] rounded-full p-4 text-3xl xs:text-4xl group hover:text-accent"
           onClick={toggleChat}
           variants={mainButton}
           initial="closed"
