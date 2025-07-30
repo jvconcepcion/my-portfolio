@@ -5,6 +5,7 @@ This is a **modern web portfolio** built using **Next.js** and **TypeScript**, d
 
 ## 🛠️ Tech Stack
 - **Framework:** Next.js (App Router, React, TypeScript)
+- **AI Models:** OpenAI GPT (gpt-4o), OpenAI TTS (`tts-1`)
 - **Security:** AES-256 encryption, Base64 encoding
 - **Styling:** Tailwind CSS, Chakra UI, Framer Motion
 - **UI Components & Effects:**
@@ -12,7 +13,7 @@ This is a **modern web portfolio** built using **Next.js** and **TypeScript**, d
 - **Maps:** Leaflet, react-leaflet
 - **Email:** Nodemailer
 - **Database:** Firestore with encrypted service account
-- **AI Assistant:** OpenAI GPT (with encrypted API key)
+- **AI Assistant:** OpenAI GPT & TTS (with encrypted API key)
 
 ---
 
@@ -50,9 +51,13 @@ Scaeva is an AI-powered virtual assistant integrated into the chat interface usi
 - Decryption occurs at runtime via `lib/decrypt.ts`
 - Secure credential handling through environment variables
 
+**AI Features:**
+- Uses OpenAI GPT (gpt-4o) for chat/completions
+- Uses OpenAI TTS (`tts-1` model) for text-to-speech via `/api/chat/tts` endpoint
+
 It also uses:
 - `localStorage` to persist messages
-- Text-to-speech and clipboard support
+- Text-to-speech (OpenAI TTS) and clipboard support
 
 ---
 
@@ -157,12 +162,12 @@ The portfolio will be available at [http://localhost:3000](http://localhost:3000
 ## 📌 Features
 ✅ Responsive and modern UI
 ✅ Animated elements with Framer Motion
-✅ Custom AI Assistant “Scaeva” using OpenAI
+✅ Custom AI Assistant “Scaeva” using OpenAI GPT and TTS (`tts-1`)  
 ✅ Interactive tag cloud & particle backgrounds
 ✅ Firestore-powered resume & chat assistant
 ✅ Leaflet map integration
 ✅ Email contact form via Nodemailer
-✅ Text-to-speech and clipboard support
+✅ Text-to-speech (OpenAI TTS) and clipboard support  
 ✅ Local message history persistence
 
 ---

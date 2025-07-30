@@ -7,7 +7,8 @@ import {
   MdOutlineDarkMode,
   MdDarkMode,
   MdRecordVoiceOver,
-  MdContentCopy
+  MdContentCopy,
+  MdOutlineStopCircle
 } from 'react-icons/md';
 import { BsSendFill, BsSendSlashFill } from "react-icons/bs";
 import Image from 'next/image';
@@ -23,6 +24,7 @@ const Messenger: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [darkMode, setDarkMode] = useState<boolean>(true);
   const [isAssistantTyping, setIsAssistantTyping] = useState<boolean>(false);
+  const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const [status, setStatus] = useState<'active' | 'idle' | 'offline'>('offline');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -44,12 +46,25 @@ const Messenger: React.FC = () => {
     }, 100);
   };
 
-  const speakText = (text: string) => {
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      speechSynthesis.speak(utterance);
-    }
-  };
+const speakWithOpenAI = async (text: string, index: number) => {
+  try {
+    setPlayingIndex(index);
+    const response = await fetch('/api/chat/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    });
+    const { audioUrl } = await response.json();
+    const audio = new Audio(audioUrl);
+
+    audio.onended = () => setPlayingIndex(null);
+    audio.onerror = () => setPlayingIndex(null);
+    audio.play();
+  } catch (err) {
+    setPlayingIndex(null);
+    console.error('Failed to play audio:', err);
+  }
+};
 
   const copyText = async (text: string) => {
     try {
@@ -101,7 +116,6 @@ const Messenger: React.FC = () => {
     scrollToBottom();
     fetchData();
 
-    // Only trigger greeting on first load if no messages are saved
     if (messages.length === 0) {
       setIsAssistantTyping(true);
       (async () => {
@@ -167,10 +181,21 @@ const Messenger: React.FC = () => {
               {msg.role === 'user' ? msg.content : null}
             </div>
 
-            {/* Icons - Positioned below the message */}
+            {/* Chat actions */}
             <div className='flex items-center gap-1 mt-1'>
-              <button onClick={() => speakText(msg.content)} className='p-1 bg-transparent hover:bg-gray-500 rounded'>
-                <MdRecordVoiceOver size={15} />
+              <button 
+                className='p-1 bg-transparent hover:bg-gray-500 rounded'
+                onClick={() =>
+                  playingIndex === index
+                    ? setPlayingIndex(null)
+                    : speakWithOpenAI(msg.content, index)
+                }
+              >
+                {playingIndex === index ? (
+                  <MdOutlineStopCircle size={15} />
+                ) : (
+                  <MdRecordVoiceOver size={15} />
+                )}
               </button>
               <button onClick={() => copyText(msg.content)} className='p-1 bg-transparent hover:bg-gray-500 rounded'>
                 <MdContentCopy size={15} />
