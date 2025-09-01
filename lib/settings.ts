@@ -1,31 +1,35 @@
 import { db } from './firebaseAdmin';
 
 export async function getResumeContent(): Promise<string> {
-  return await fetchChatContent('resumeContent');
+  return await fetchCollection('chat-content', 'resumeContent');
 };
 
 export async function getAIGreetings(): Promise<string> {
-  return await fetchChatContent('greetings');
-}
+  return await fetchCollection('chat-content', 'greetings');
+};
 
-async function fetchChatContent(docId: string): Promise<string> {
+export async function getCV(): Promise<string> {
+  return await fetchCollection('data', 'cv');
+};
+
+async function fetchCollection(collection: string, docId: string): Promise<string> {
   try {
-    const doc = await db.collection('chat-content').doc(docId).get();
+    const doc = await db.collection(collection).doc(docId).get();
 
     if (!doc.exists) {
       console.warn(`${docId} document not found, using default.`);
-      return getDefaultChatContent(docId);
+      return getDefaultContent(docId);
     }
 
     const data = doc.data();
-    return typeof data?.value === 'string' ? data.value : getDefaultChatContent(docId);
+    return typeof data?.value === 'string' ? data.value : getDefaultContent(docId);
   } catch (error) {
     console.error(`Error retrieving ${docId}:`, error);
-    return getDefaultChatContent(docId);
+    return getDefaultContent(docId);
   }
 };
 
-function getDefaultChatContent(docId: string): string {
+function getDefaultContent(docId: string): string {
   switch (docId) {
     case 'resumeContent':
       return `
@@ -60,6 +64,8 @@ function getDefaultChatContent(docId: string): string {
         `;
     case 'greetings':
       return `Greetings! I’m Scaeva, Nathan’s personal AI assistant. If you’re here to learn more about him, I’d be happy to help.`;
+    case 'cv':
+      return 'https://drive.usercontent.google.com/download?id=1egdqN9WKju7x6hcXfBUvHxwQiCH2RM2_&export=download&authuser=0';
     default:
       return '';
   }

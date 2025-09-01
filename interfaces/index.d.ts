@@ -196,7 +196,7 @@ export interface CustomTextRendererProps {
   count?: number;
   color?: string;
   url?: string;
-}
+};
 
 export interface StackListDataProps {
   data: any[],
@@ -225,13 +225,17 @@ export interface StackListDataProps {
 
 // api data props
 
+export interface CVResponse {
+  cv: string;
+};
+
 export interface CustomError extends Error {
   status?: number;
   message: string;
   response?: {
     status: number;
   };
-}
+};
 
-export interface CustomTransporter extends Transporter<SentMessageInfo> {}
+export interface CustomTransporter extends Transporter<SentMessageInfo> {};
 
