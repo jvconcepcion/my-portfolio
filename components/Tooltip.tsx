@@ -1,20 +1,31 @@
 import React from 'react';
-import { TooltipProps } from '@interfaces';
+import { Tooltip } from '@chakra-ui/react';
+import { CustomTooltipProps } from '@interfaces';
 
-const Tooltip: React.FC<TooltipProps> = ({ name = '', positionClass = '' }) => {
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ 
+  label = "",
+  placement = "left",
+  marginRight = 28,
+  arrowSize = 5,
+  isDisabled = false,
+  children 
+}) => {
   return (
-    <div className={`absolute hidden xl:group-hover:flex ${positionClass}`}>
-      <div className='bg-white relative inline-flex text-primary items-center p-[6px] rounded-[3px] shadow-md whitespace-nowrap'>
-
-        <div className='text-[12px] leading-none font-semibold capitalize'>
-          {name}
-        </div>
-        {/* pointer/triangle */}
-        <div className='border-solid border-l-white border-l-8 border-y-transparent
-      border-y-[6px] border-r-0 absolute -right-2' />
-      </div>
-    </div>
+    <Tooltip
+      aria-label='A tooltip'
+      label={label} 
+      hasArrow 
+      placement={placement}
+      bg="white"
+      color="black"
+      marginRight={marginRight} 
+      arrowSize={arrowSize} 
+      className="custom-tooltip text-sm px-1 rounded-sm font-semibold capitalize"
+      isDisabled={isDisabled}
+    >
+      {children}
+    </Tooltip>
   )
 }
 
-export default Tooltip;
+export default CustomTooltip;

@@ -11,7 +11,6 @@ import {
 
 const ChatPopUp: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const mainButton = {
     open: { rotate: 90 },
@@ -40,13 +39,6 @@ const ChatPopUp: React.FC = () => {
       className={`fixed bottom-[7rem] right-8 sm:right-8 flex flex-col-reverse z-[100] ${!isOpen && 'transition-all duration-75 animate-pulse'}`}
     >
       <div className="relative group">
-        {/* Tooltip for AI Assistant */}
-        {!isOpen && (
-          <Tooltip
-            name="AI Assistant"
-            positionClass="pr-20 right-0 xl:group-hover:flex bottom-[1.3rem]"
-          />
-        )}
         <AnimatePresence>
           {isOpen && (
             <motion.div
@@ -62,16 +54,19 @@ const ChatPopUp: React.FC = () => {
         </AnimatePresence>
 
         {/* Chat Button */}
-        <motion.button
-          className="fixed bottom-[5rem] xs:bottom-[6rem] right-5 lg:right-10 z-[100] rounded-full p-4 text-3xl xs:text-4xl group hover:text-accent"
-          onClick={toggleChat}
-          variants={mainButton}
-          initial="closed"
-          animate={isOpen ? 'open' : 'closed'}
-          aria-label="Toggle chat popup"
-        >
-          {isOpen ? <FiX /> : <HiChatAlt2 />}
-        </motion.button>
+        <Tooltip label="Nathan's AI Assistant" marginRight={-10} isDisabled={isOpen}>
+          <motion.button
+            className="fixed bottom-[5rem] xs:bottom-[6rem] right-5 lg:right-10 z-[100] rounded-full p-4 text-3xl xs:text-4xl group hover:text-accent"
+            onClick={toggleChat}
+            variants={mainButton}
+            initial="closed"
+            animate={isOpen ? 'open' : 'closed'}
+            aria-label="Toggle chat popup"
+          >
+            {isOpen ? <FiX /> : <HiChatAlt2 />}
+          </motion.button>
+
+        </Tooltip>
       </div>
     </motion.div>
   )

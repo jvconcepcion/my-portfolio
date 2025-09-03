@@ -4,6 +4,7 @@ import { UrlObject } from 'url';
 import { SwiperOptions } from 'swiper/types';
 import { SimpleIcon } from 'react-icon-cloud';
 import { Map } from 'leaflet';
+import { PlacementWithLogical } from '@node_modules/@chakra-ui/react/dist/types';
 
 // api error
 interface APIError extends Error {
@@ -12,9 +13,13 @@ interface APIError extends Error {
 }
 
 // tooltip
-export interface TooltipProps {
-  name?: string;
-  positionClass?: string;
+export interface CustomTooltipProps {
+  label: string;
+  placement?: PlacementWithLogical;
+  marginRight?: number;
+  arrowSize?: number;
+  isDisabled?: boolean;
+  children: string | JSX.Element | JSX.Element[],
 }
 
 

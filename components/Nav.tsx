@@ -1,10 +1,9 @@
 'use client'
 
 import Link from 'next/link';
+import Tooltip from './Tooltip';
 import { usePathname } from 'next/navigation';
 import { navData } from '@utils';
-import { Tooltip } from '@components';
-import { NavDataProps } from '@interfaces';
 
 const Nav: React.FC = () => {
   const pathname = usePathname();
@@ -21,10 +20,12 @@ const Nav: React.FC = () => {
             group hover:text-accent transition-all duration-300`}
             key={i}
             href={path}
-          >
-            <Tooltip name={name} positionClass='pr-14 right-0 xl:group-hover:flex'/>
-            {icon}
-          </Link>))}
+          > 
+            <Tooltip label={name}>
+              <span>{icon}</span>
+            </Tooltip>
+          </Link>
+        ))}
       </div>
     </nav>
   );
