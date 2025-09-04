@@ -1,62 +1,101 @@
 'use client';
 
-import React, { useState, useRef, useEffect  } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { MusicPlayerProps } from '@interfaces';
 import { FaPlay, FaPause } from 'react-icons/fa';
 import { GiNextButton, GiPreviousButton } from 'react-icons/gi';
 
 const MusicPlayer: React.FC<MusicPlayerProps> = ({ playlist }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [isReady, setIsReady] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // New state to track loading
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const togglePlay = () => {
-    if (isPlaying) {
-      audioRef.current?.pause();
-    } else {
-      audioRef.current?.play().catch(error => console.error(error));
+  const togglePlay = useCallback(() => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current?.pause();
+      } else {
+        audioRef.current?.play().catch(error => console.error("Play failed:", error));
+      }
+      setIsPlaying(!isPlaying);
     }
-    setIsPlaying(!isPlaying);
-  };
+  }, [isPlaying]);
 
-  const playNext = () => {
+  const playNext = useCallback(() => {
     const nextIndex = (currentTrackIndex + 1) % playlist.length;
     setCurrentTrackIndex(nextIndex);
-    setIsReady(false); // Reset readiness
-  };
+    setIsPlaying(true);
 
-  const playPrevious = () => {
+    setIsLoading(true);
+  }, [currentTrackIndex, playlist]);
+
+  const playPrevious = useCallback(() => {
     const prevIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
     setCurrentTrackIndex(prevIndex);
-    setIsReady(false); // Reset readiness
-  };
+    setIsPlaying(true);
+
+    setIsLoading(true);
+  }, [currentTrackIndex, playlist]);
 
   const onCanPlay = () => {
-    setIsReady(true); // Set readiness to true when audio can play
+    setIsLoading(false);
   };
 
-  const onEnded = () => {
+  const onEnded = useCallback(() => {
     playNext();
-  };
+  }, [playNext]);
 
   useEffect(() => {
-    // Check if the audio element is ready and autoplay is allowed
-    if (audioRef.current && isReady) {
-      audioRef.current.play().catch(error => console.error(error));
-      setIsPlaying(true); // Set isPlaying to true after play()
+    const audioEl = audioRef.current;
+
+    async function loadAudio() {
+      if (audioEl) {
+        setIsLoading(true);
+        try {
+          // Fetch from your secure API route
+          const trackUrl = `/api/audio?track=${encodeURIComponent(playlist[currentTrackIndex].src)}`;
+          const response = await fetch(trackUrl);
+
+          if (!response.ok) {
+            throw new Error(`Failed to load audio: ${response.statusText}`);
+          }
+
+          // Create a temporary Blob URL to prevent direct downloading.
+          const audioBlob = await response.blob();
+          const audioUrl = URL.createObjectURL(audioBlob);
+          audioEl.src = audioUrl;
+
+          setIsLoading(false);
+          // Auto-play the new song if the user previously had it playing.
+          if (isPlaying) {
+            audioEl.play().catch(error => console.error("Autoplay failed:", error));
+          }
+
+        } catch (error) {
+          console.error("Error fetching or loading audio:", error);
+          setIsLoading(false);
+          setIsPlaying(false);
+        }
+      }
     }
 
-  }, [isReady]);
+    loadAudio();
+
+    return () => {
+      if (audioEl && audioEl.src) {
+        URL.revokeObjectURL(audioEl.src);
+      }
+    };
+  }, [currentTrackIndex, isPlaying, playlist]);
 
   return (
     <div className="z-[9999] fixed right-0 lg:bottom-0 xl:right-[2%] m-1 p-1 lg:pt-4 bg-white/10 text-white rounded-sm animate-pulse duration-75" >
       <audio
         ref={audioRef}
-        src={playlist[currentTrackIndex].src}
         loop={false}
         onEnded={onEnded}
-        onCanPlay={onCanPlay} // Attach onCanPlay event handler
+        onCanPlay={onCanPlay}
       />
       <div className="flex space-x-4 justify-around">
         <button className="bg-transparent text-white p-0 rounded" onClick={playPrevious}>
@@ -71,9 +110,8 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ playlist }) => {
       </div>
       <div className="hidden xl:block mt-2 mx-2 overflow-hidden" style={{ width: '150px', height: '25px' }}>
         <div className="inline-block">
-          {/* <p className="text-xs inline mr-4">Now Playing: {playlist[currentTrackIndex].title}</p> */}
           <p className="text-[10px] inline mr-4 animate-marquee text-[#e68e2e]">
-            Now Playing: <strong>{playlist[currentTrackIndex].title}</strong>
+            Current track: <strong>{playlist[currentTrackIndex].title}</strong>
           </p>
         </div>
       </div>

@@ -50,8 +50,8 @@ import {
 
 // bgm data
 export const playlist = [
-  { title: 'I Don’t Wan’t To See Tomorrow - Nat King Cole', src: '/bgm/i-dont-want-to-see-tomorrow.mp3' },
-  { title: 'The Mamas & The Papas - California Dreamin', src: '/bgm/california-dreamin.mp3' },
+  { title: 'I Don\'t Want To See Tomorrow - Nat King Cole', src: 'i-dont-want-to-see-tomorrow.mp3' },
+  { title: 'The Mamas & The Papas - California Dreamin', src: 'california-dreamin.mp3' },
 ];
 
 // nav data
