@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, CSSProperties } from 'react';
+import React, { Dispatch, SetStateAction, CSSProperties } from 'react';
 import { Transporter, SentMessageInfo } from 'nodemailer';
 import { UrlObject } from 'url';
 import { SwiperOptions } from 'swiper/types';
@@ -19,7 +19,7 @@ export interface CustomTooltipProps {
   marginRight?: number;
   arrowSize?: number;
   isDisabled?: boolean;
-  children: string | JSX.Element | JSX.Element[],
+  children: string | React.JSX.Element | React.JSX.Element[],
 }
 
 
@@ -55,7 +55,7 @@ export interface SimpleIconProps {
 export interface NavDataProps {
   name: string,
   path: string | UrlObject,
-  icon: JSX.Element,
+  icon: React.JSX.Element,
 };
 
 // messenger
@@ -68,7 +68,7 @@ export interface MessagesProps {
 export interface SocialDataProps {
   link: string | UrlObject,
   style: string,
-  icon: JSX.Element,
+  icon: React.JSX.Element,
 };
 
 // about types
@@ -122,7 +122,7 @@ export interface MapConfigProps {
 export interface MinimapControlProps {
   position: string,
   zoom?: number,
-  children?: string | JSX.Element | JSX.Element[],
+  children?: string | React.JSX.Element | React.JSX.Element[],
 };
 
 export interface MiniBoundsProps {
@@ -146,7 +146,7 @@ export interface CustomPanningConfigProps {
   title: string,
   className: string,
   onClick: (e: React.MouseEvent) => void,
-  component: JSX.Element,
+  component: React.JSX.Element,
 }
 
 // (services, work) slider/swiper types
@@ -156,7 +156,7 @@ export interface DefaultBreakpointsProps {
 };
 
 export interface ServicesDataProps {
-  icon: JSX.Element,
+  icon: React.JSX.Element,
   title: string,
   description: string,
 };
@@ -236,6 +236,7 @@ export interface CVResponse {
 
 export interface CustomError extends Error {
   status?: number;
+  code?: string;
   message: string;
   response?: {
     status: number;

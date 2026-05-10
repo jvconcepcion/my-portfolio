@@ -12,6 +12,23 @@ export async function getCV(): Promise<string> {
   return await fetchCollection('data', 'cv');
 };
 
+export async function getAIQuotaExceeded(): Promise<boolean> {
+  try {
+    const doc = await db.collection('settings').doc('aiStatus').get();
+    return doc.exists ? (doc.data()?.quotaExceeded === true) : false;
+  } catch {
+    return false;
+  }
+};
+
+export async function setAIQuotaExceeded(value: boolean): Promise<void> {
+  try {
+    await db.collection('settings').doc('aiStatus').set({ quotaExceeded: value }, { merge: true });
+  } catch (error) {
+    console.error('Failed to persist AI quota status:', error);
+  }
+};
+
 async function fetchCollection(collection: string, docId: string): Promise<string> {
   try {
     const doc = await db.collection(collection).doc(docId).get();

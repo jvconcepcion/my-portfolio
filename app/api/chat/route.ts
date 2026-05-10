@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 import { NextResponse } from 'next/server';
 import { CustomError } from '@interfaces';
 import { decryptEnvSecret } from '@lib/decrypt';
-import { getResumeContent, getAIGreetings } from '@lib/settings';
+import { getResumeContent, getAIGreetings, getAIQuotaExceeded, setAIQuotaExceeded } from '@lib/settings';
 
 const apiKey = decryptEnvSecret(
   process.env.OPENAI_KEY_ENCRYPTED!,
@@ -12,6 +12,7 @@ const apiKey = decryptEnvSecret(
 const openai = new OpenAI({ apiKey });
 
 let lastActivity = Date.now(); // Track AI activity time
+let quotaExceeded = false; // Track if OpenAI quota is exhausted
 
 export async function POST(req: Request) {
   try {
@@ -57,10 +58,17 @@ export async function POST(req: Request) {
     console.error('Error:', e);
 
     const error = e as CustomError;
-    if (error?.response?.status === 402) {
+    const isQuotaError =
+      error?.status === 429 ||
+      error?.code === 'insufficient_quota' ||
+      error?.response?.status === 402;
+
+    if (isQuotaError) {
+      quotaExceeded = true;
+      await setAIQuotaExceeded(true);
       return NextResponse.json(
         { error: 'Insufficient API balance. Please check your OpenAI account.' },
-        { status: 402 }
+        { status: 429 }
       );
     }
 
@@ -70,6 +78,15 @@ export async function POST(req: Request) {
 
 // 🌐 GET API - AI Status
 export async function GET() {
+  // Check in-memory flag first, fall back to Firestore (survives server restarts)
+  if (!quotaExceeded) {
+    quotaExceeded = await getAIQuotaExceeded();
+  }
+
+  if (quotaExceeded) {
+    return NextResponse.json({ status: 'quota_exceeded' });
+  }
+
   const now = Date.now();
   const elapsed = now - lastActivity;
   const status = elapsed < 30000 ? 'active' : elapsed < 60000 ? 'idle' : 'offline';
