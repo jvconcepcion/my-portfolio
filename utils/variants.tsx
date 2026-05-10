@@ -1,7 +1,8 @@
 import { ISourceOptions } from "tsparticles-engine"
+import { Variants } from "framer-motion"
 
 // framer motion variants
-export const fadeIn = (direction: string, delay: number) => {
+export const fadeIn = (direction: string, delay: number): Variants => {
   return {
     hidden: {
       y: direction === 'up' ? 80 : direction === 'down' ? -80 : 0,

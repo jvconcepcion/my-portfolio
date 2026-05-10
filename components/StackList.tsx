@@ -67,7 +67,7 @@ const StackList = ({
     element = 'h3',
     className = 'h3 text-accent px-5',
     text = 'Label'
-  }): JSX.Element => <StringToJSX domString={`<${element}>${text}</${element}>`} className={className} />
+  }): React.JSX.Element => <StringToJSX domString={`<${element}>${text}</${element}>`} className={className} />
 
   const MainList = ({
     data = null,

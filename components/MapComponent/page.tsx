@@ -1,3 +1,5 @@
+'use client';
+
 import { InteractiveLoader } from '@components';
 import dynamic from 'next/dynamic';
 

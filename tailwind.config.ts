@@ -7,9 +7,6 @@ const config: Config = {
     './containers/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  purge: {
-    safelist: ['list-header', 'default-label', 'highlight', /^leaflet-control-/],
-  },
   theme: {
     container: {
       padding: {
@@ -55,14 +52,8 @@ const config: Config = {
       },
     },
   },
-  container: {
-    padding: {
-      DEFAULT: '15px',
-    },
-  },
   plugins: [
-    require('postcss-nested'),
-    require('tailwind-scrollbar')({ nocompatible: true }),
+    require('tailwind-scrollbar'),
   ],
 }
 export default config
