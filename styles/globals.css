@@ -1,6 +1,19 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+@theme inline {
+  --color-status-active:         var(--status-active);
+  --color-status-idle:           var(--status-idle);
+  --color-status-offline:        var(--status-offline);
+  --color-status-quota-exceeded: var(--status-quota-exceeded);
+}
+
+:root {
+  --status-active:         oklch(79.2% 0.209 151.711);
+  --status-idle:           oklch(85.2% 0.199 91.936);
+  --status-offline:        oklch(70.7% 0.022 261.325);
+  --status-quota-exceeded: oklch(70.4% 0.191 22.216);
+}
 
 .translate-z-0 {
   transform: translateZ(0px);
@@ -89,11 +102,11 @@ div:has(.custom-tooltip) {
 
   .btn,
   .input {
-    @apply h-[52px];
+    @apply h-13;
   }
 
   .input {
-    @apply w-full h-[52px] rounded-lg pl-6;
+    @apply w-full h-13 rounded-lg pl-6;
   }
 
   .input,
@@ -102,7 +115,7 @@ div:has(.custom-tooltip) {
   }
 
   .textarea {
-    @apply w-full h-[180px] p-6 capitalize rounded-lg resize-none;
+    @apply w-full h-45 p-6 capitalize rounded-lg resize-none;
   }
 
   .text-sphere {
@@ -118,11 +131,11 @@ div:has(.custom-tooltip) {
   }
 
   .list-header {
-    @apply h3 max-w-[19rem] text-start;
+    @apply leading-tight text-[0.65rem] md:text-sm text-gray-900 font-semibold max-w-76 text-start;
   }
 
   .default-label {
-    @apply mt-0 max-w-[18rem] text-[9px] text-gray-500 text-start;
+    @apply mt-0 max-w-72 text-[9px] text-gray-500 text-start;
   }
 
   .highlight {
@@ -138,11 +151,11 @@ div:has(.custom-tooltip) {
   }
 
   .miniMapContainer {
-    @apply shadow-[rgba(0,0,0,0.65)_0_1px_5px] h-[6rem] w-[6rem] xs:h-[7rem] xs:w-[7rem] sm:h-[9rem] sm:w-[9rem];
+    @apply shadow-[rgba(0,0,0,0.65)_0_1px_5px] h-24 w-24 xs:h-28 xs:w-28 sm:h-36 sm:w-36;
   }
 
   .leaflet-bar {
-    @apply shadow-[rgba(0,0,0,0.65)_0_1px_5px] rounded-[4px] !border-none m-[0.625rem] z-[99999];
+    @apply shadow-[rgba(0,0,0,0.65)_0_1px_5px] rounded !border-none m-2.5 z-[99999];
 
     /* &:hover {
       @apply border-b-[1px] border-solid border-[#ccc] mr-5 leading-[1.625rem];
@@ -152,7 +165,7 @@ div:has(.custom-tooltip) {
       @apply bg-center bg-no-repeat block;
 
       &:nth-child(1) {
-        @apply shadow-[rgba(0,0,0,0.65)_0_1px_5px] rounded-tl-[0.25rem] rounded-tr-[0.25rem] border-b-0;
+        @apply shadow-[rgba(0,0,0,0.65)_0_1px_5px] rounded-tl rounded-tr border-b-0;
       }
 
       &:nth-child(2) {
@@ -164,7 +177,7 @@ div:has(.custom-tooltip) {
       }
 
       &:nth-child(4) {
-        @apply shadow-[rgba(0,0,0,0.65)_0_1px_5px] rounded-bl-[0.25rem] rounded-br-[0.25rem] border-b-0;
+        @apply shadow-[rgba(0,0,0,0.65)_0_1px_5px] rounded-bl rounded-br border-b-0;
       }
 
       &.leaflet-control-zoom-in, &.leaflet-control-center, &.leaflet-control-zoom-out, &.leaflet-control-enable-panning, &.leaflet-control-disable-panning {

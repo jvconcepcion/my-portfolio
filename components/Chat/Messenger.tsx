@@ -8,10 +8,20 @@ import {
   MdDarkMode,
   MdRecordVoiceOver,
   MdContentCopy,
-  MdOutlineStopCircle
+  MdOutlineStopCircle,
+  MdWarningAmber
 } from 'react-icons/md';
 import { BsSendFill, BsSendSlashFill } from "react-icons/bs";
 import Image from 'next/image';
+
+type ChatStatus = 'active' | 'idle' | 'offline' | 'quota_exceeded';
+
+const STATUS = {
+  active:         { dot: 'bg-status-active',         text: 'text-status-active',         label: 'active' },
+  idle:           { dot: 'bg-status-idle',            text: 'text-status-idle',           label: 'idle' },
+  offline:        { dot: 'bg-status-offline',         text: 'text-status-offline',        label: 'offline' },
+  quota_exceeded: { dot: 'bg-status-quota-exceeded',  text: 'text-status-quota-exceeded', label: 'unavailable' },
+} satisfies Record<ChatStatus, { dot: string; text: string; label: string }>;
 
 const Messenger: React.FC = () => {
   const [messages, setMessages] = useState<MessagesProps[]>(() => {
@@ -25,7 +35,13 @@ const Messenger: React.FC = () => {
   const [darkMode, setDarkMode] = useState<boolean>(true);
   const [isAssistantTyping, setIsAssistantTyping] = useState<boolean>(false);
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
-  const [status, setStatus] = useState<'active' | 'idle' | 'offline'>('offline');
+  const [status, setStatus] = useState<ChatStatus>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('chat_status') as ChatStatus) || 'offline';
+    }
+    return 'offline';
+  });
+  const [showQuotaAlert, setShowQuotaAlert] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const fetchStatus = debounce(async () => {
@@ -34,6 +50,7 @@ const Messenger: React.FC = () => {
       if (!response.ok) throw new Error('Failed to fetch status');
       const data = await response.json();
       setStatus(data.status);
+      localStorage.setItem('chat_status', data.status);
       scrollToBottom();
     } catch (error) {
       setStatus('offline');
@@ -90,6 +107,15 @@ const speakWithOpenAI = async (text: string, index: number) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: newMessages })
       });
+
+      if (response.status === 429) {
+        setStatus('quota_exceeded');
+        localStorage.setItem('chat_status', 'quota_exceeded');
+        setMessages(prev => [...prev, { role: 'assistant', content: "I'm currently out of credits. Please check back later." }]);
+        setIsAssistantTyping(false);
+        setIsLoading(false);
+        return;
+      }
 
       if (!response.ok) throw new Error('API error');
       const data: { reply: string } = await response.json();
@@ -151,9 +177,17 @@ const speakWithOpenAI = async (text: string, index: number) => {
       {/* Header */}
       <div className={`flex items-center justify-between p-2 rounded-t-md ${darkMode ? 'bg-gray-800' : 'bg-gray-300'}`}>
         <div className='flex items-center space-x-2'>
-          <Image src='/ai.jpg' width={32} height={32} alt='AI Assistant' className='w-8 h-8 rounded-full' />
-          <div>
-            <p className={`text-sm ${darkMode ? 'text-white' : 'text-black'} font-semibold`}>Scaeva</p>
+          <div className='relative'>
+            <Image src='/ai.jpg' width={32} height={32} alt='AI Assistant' className='w-8 h-8 rounded-full' />
+            <span
+              className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 ${STATUS[status].dot} ${darkMode ? 'border-gray-800' : 'border-gray-300'}`}
+            />
+          </div>
+          <div className='leading-none'>
+            <p className={`text-sm ${darkMode ? 'text-white' : 'text-black'} font-semibold -mb-0.5`}>Scaeva</p>
+            <p className={`text-[10px] capitalize leading-none ${STATUS[status].text}`}>
+              {STATUS[status].label}
+            </p>
           </div>
         </div>
         <button onClick={() => setDarkMode(!darkMode)} className='p-1 rounded-full bg-transparent border border-gray-500 hover:bg-gray-500'>
@@ -250,19 +284,49 @@ const speakWithOpenAI = async (text: string, index: number) => {
         onSubmit={handleSubmit} 
         className={`flex gap-2 p-4 ${darkMode ? 'bg-gray-800' : 'bg-gray-300'}`}
       >
+        {status === 'quota_exceeded' && (
+          <div className='relative flex items-center'>
+            <button
+              type='button'
+              onClick={() => setShowQuotaAlert(prev => !prev)}
+              className='text-yellow-400 hover:text-yellow-300 transition-colors'
+              aria-label='AI unavailable info'
+            >
+              <MdWarningAmber size={22} />
+            </button>
+            {showQuotaAlert && (
+              <div className={`absolute bottom-10 left-0 w-56 text-xs rounded-md shadow-lg p-3 z-50 border ${
+                darkMode
+                  ? 'bg-gray-700 text-gray-200 border-yellow-500/40'
+                  : 'bg-white text-gray-700 border-yellow-400'
+              }`}>
+                <p className='font-semibold text-yellow-400 mb-1'>AI Unavailable</p>
+                <p>Scaeva has temporarily run out of credits. Please check back later.</p>
+              </div>
+            )}
+          </div>
+        )}
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder='Ask Scaeva'
-          disabled={isLoading}
-          className={`flex-1 p-2 border rounded-md focus:outline-none placeholder:text-sm text-xs xs:text-[16px] ${darkMode ? 'bg-gray-800 text-white border-gray-700 focus:ring-gray-500' : 'bg-white text-black border-gray-300 focus:ring-blue-500'}`}
+          placeholder={status === 'quota_exceeded' ? 'AI is currently unavailable' : 'Ask Scaeva'}
+          disabled={isLoading || status === 'quota_exceeded'}
+          className={`flex-1 p-2 border rounded-md focus:outline-none placeholder:text-sm text-xs xs:text-[16px] ${
+            status === 'quota_exceeded'
+              ? darkMode
+                ? 'bg-gray-900 text-gray-500 border-gray-700 cursor-not-allowed'
+                : 'bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed'
+              : darkMode
+                ? 'bg-gray-800 text-white border-gray-700 focus:ring-gray-500'
+                : 'bg-white text-black border-gray-300 focus:ring-blue-500'
+          }`}
         />
         <button
           type='submit'
-          disabled={isLoading || input.trim() === ""}
+          disabled={isLoading || input.trim() === '' || status === 'quota_exceeded'}
           className='px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
         >
-          {input !== "" ? <BsSendFill /> : <BsSendSlashFill />}
+          {input !== '' ? <BsSendFill /> : <BsSendSlashFill />}
         </button>
       </form>
     </div>
