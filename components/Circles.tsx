@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { storageUrl } from '@/lib/storage';
 
 const Circles = () => {
   return (
@@ -6,7 +7,7 @@ const Circles = () => {
     animate-pulse duration-75 z-5 rotate-90'>
       <Image
         className='w-full h-full'
-        src={'/circles.png'}
+        src={storageUrl('ui/circles.png')}
         width={260}
         height={200}
         alt=''

@@ -45,7 +45,6 @@ import {
   AboutDataProps,
   DefaultBreakpointsProps,
   ServicesDataProps,
-  WorkDataProps,
 } from '@interfaces';
 
 // bgm data
@@ -107,6 +106,7 @@ export const aboutData: AboutDataProps[] = [
           { value: 'MongoDB', iconID: 'mongodb', count: 22, color: '#47A248', url: 'https://www.mongodb.com/' },
           { value: 'Nginx', iconID: 'nginx', count: 17, color: '#009639', url: 'https://nginx.org/' },
           { value: 'GraphQL', iconID: 'graphql', count: 18, color: '#F6009B', url: 'https://graphql.org/' },
+          { value: 'Supabase', iconID: 'supabase', count: 15, color: '#3ECF8E', url: 'https://supabase.com/' },
         ]            
       },
     ],
@@ -296,86 +296,3 @@ export const serviceData: ServicesDataProps[] = [
     description: 'Elevate your brand with a cohesive and compelling digital presence. From logo design to complete brand identity, I help you establish a strong, memorable brand that resonates with your target audience.',
   },
 ];
-
-export const workData: WorkDataProps = {
-  slides: [
-    {
-      images: [
-        {
-          title: 'Weather Forecast',
-          path: '/proj-weather-forcecast.jpg',
-          siteLink: 'https://github.com/jvconcepcion/weather-forecast',
-          gitLink: 'https://github.com/jvconcepcion/weather-forecast'
-        },
-        {
-          title: 'Meme Generator',
-          path: '/proj-meme.jpg',
-          siteLink: 'https://github.com/jvconcepcion/meme-generator',
-          gitLink: 'https://github.com/jvconcepcion/meme-generator'
-        },
-        {
-          title: 'Rappler',
-          path: '/proj-rappler.jpg',
-          siteLink: 'https://www.rappler.com',
-          gitLink: ''
-        },
-        {
-          title: 'Rappler Election 2022',
-          path: '/proj-rappler-election.jpg',
-          siteLink: 'https://ph.rappler.com',
-          gitLink: ''
-        }
-      ],
-    },
-    {
-      images: [
-        {
-          title: 'Metrobank Command Center',
-          path: '/mbcc.jpg',
-          siteLink: 'https://onlinebanking.metrobank.com.ph/signin',
-          gitLink: ''
-        },
-        {
-          title: 'Metrobank Online Banking',
-          path: '/mbo.jpg',
-          siteLink: 'https://onlinebanking.metrobank.com.ph/signin',
-          gitLink: ''
-        },
-        {
-          title: 'My Portfolio',
-          path: '/portfolio.jpg',
-          siteLink: 'https://my-portfolio-jonathan-vidad-concepcions-projects.vercel.app',
-          gitLink: 'https://github.com/jvconcepcion/my-portfolio'
-        },
-        {
-          title: 'Classpass Clone',
-          path: '/proj-classpass-clone.jpg',
-          siteLink: 'https://my-class-pass.vercel.app',
-          gitLink: 'https://github.com/jvconcepcion/my-class-pass'
-        }
-      ],
-    },
-    {
-      images: [
-        {
-          title: 'NovaVision',
-          path: '/proj-nova-vission.jpg',
-          siteLink: 'https://nova-vision.vercel.app',
-          gitLink: 'https://github.com/jvconcepcion/nova-vision'
-        },
-        {
-          title: 'Ai Image Generator',
-          path: '/proj-ai-image-gen.jpg',
-          siteLink: 'https://github.com/jvconcepcion/ai-image-generator',
-          gitLink: 'https://github.com/jvconcepcion/ai-image-generator'
-        },
-        {
-          title: 'Chinese Poetry App',
-          path: '/proj-poetry.jpg',
-          siteLink: 'https://github.com/jvconcepcion/chinese-poetry-app',
-          gitLink: 'https://github.com/jvconcepcion/chinese-poetry-app'
-        },
-      ],
-    },
-  ],
-};
