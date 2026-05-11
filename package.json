@@ -12,6 +12,7 @@
   "dependencies": {
     "@chakra-ui/react": "^2.10.5",
     "@react-leaflet/core": "^3.0.0",
+    "@supabase/supabase-js": "^2.105.4",
     "@tailwindcss/postcss": "^4.3.0",
     "clsx": "^2.1.1",
     "crypto": "^1.0.1",

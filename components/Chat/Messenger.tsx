@@ -13,6 +13,7 @@ import {
 } from 'react-icons/md';
 import { BsSendFill, BsSendSlashFill } from "react-icons/bs";
 import Image from 'next/image';
+import { storageUrl } from '@/lib/storage';
 
 type ChatStatus = 'active' | 'idle' | 'offline' | 'quota_exceeded';
 
@@ -178,7 +179,7 @@ const speakWithOpenAI = async (text: string, index: number) => {
       <div className={`flex items-center justify-between p-2 rounded-t-md ${darkMode ? 'bg-gray-800' : 'bg-gray-300'}`}>
         <div className='flex items-center space-x-2'>
           <div className='relative'>
-            <Image src='/ai.jpg' width={32} height={32} alt='AI Assistant' className='w-8 h-8 rounded-full' />
+            <Image src={storageUrl('avatar/ai.jpg')} width={32} height={32} alt='AI Assistant' className='w-8 h-8 rounded-full' />
             <span
               className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 ${STATUS[status].dot} ${darkMode ? 'border-gray-800' : 'border-gray-300'}`}
             />

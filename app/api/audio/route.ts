@@ -1,6 +1,4 @@
 import { NextRequest } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -13,26 +11,17 @@ export async function GET(req: NextRequest) {
     });
   }
 
-  // Prevent directory traversal
-  const safeTrack = path.basename(track);
-
-  // Path to private audio
-  const filePath = path.join(process.cwd(), 'private', 'bgm', safeTrack);
-
-  if (!fs.existsSync(filePath)) {
+  // Prevent directory traversal — only allow known filenames
+  const allowed = ['california-dreamin.mp3', 'i-dont-want-to-see-tomorrow.mp3'];
+  if (!allowed.includes(track)) {
     return new Response(JSON.stringify({ error: 'Track not found.' }), {
       status: 404,
       headers: { 'Content-Type': 'application/json' },
     });
   }
 
-  const fileStream = fs.createReadStream(filePath);
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const audioUrl = `${supabaseUrl}/storage/v1/object/public/portfolio-assets/audio/${track}`;
 
-  return new Response(fileStream as any, {
-    status: 200,
-    headers: {
-      'Content-Type': 'audio/mpeg',
-      'Content-Disposition': 'inline',
-    },
-  });
+  return Response.redirect(audioUrl, 302);
 }

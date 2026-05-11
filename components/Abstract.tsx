@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { storageUrl } from '@/lib/storage';
 
 const Abstract = () => {
   return (
@@ -6,7 +7,7 @@ const Abstract = () => {
     animate-pulse duration-75 z-5 scale-x-[-1]'>
       <Image
         className='w-full h-full'
-        src={'/abstract.png'}
+        src={storageUrl('ui/abstract.png')}
         width={260}
         height={200}
         alt=''

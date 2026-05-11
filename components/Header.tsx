@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Socials from './Socials';
+import { storageUrl } from '@/lib/storage';
 
 const Header = () => {
   return (
@@ -9,11 +10,11 @@ const Header = () => {
         <div className='flex flex-col lg:flex-row justify-between items-center gap-y-6 py-8'>
           <Link href={'/'}>
             <Image
-              src={'/mylogo.svg'}
+              src={storageUrl('ui/mylogo.svg')}
               width={220}
-              height={48}
+              height={220}
               alt=''
-              priority={true}
+              style={{ height: 'auto' }}
               className='animate-pulse duration-75'
             />
           </Link>

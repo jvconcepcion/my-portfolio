@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { storageUrl } from '@/lib/storage';
 
 const PipBoy = () => {
   return (
@@ -9,7 +10,7 @@ const PipBoy = () => {
       duration-75 z-20 w-[200px] xl:w-[350px]'
     >
       <Image
-        src={'/pip-boy.png'}
+        src={storageUrl('ui/pip-boy.png')}
         width={350}
         height={200}
         className='w-full h-full'
