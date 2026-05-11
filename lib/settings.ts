@@ -1,21 +1,54 @@
-import { db } from './firebaseAdmin';
+import { supabase } from './supabase';
+
+export interface ProjectRow {
+  id: string;
+  title: string;
+  image_path: string;
+  site_link: string;
+  git_link: string;
+  sort_order: number;
+}
+
+export async function getProjects(): Promise<ProjectRow[]> {
+  try {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('id, title, image_path, site_link, git_link, sort_order')
+      .order('sort_order', { ascending: true });
+
+    if (error || !data) {
+      console.warn('[Supabase] Failed to fetch projects, using empty list.');
+      return [];
+    }
+    return data as ProjectRow[];
+  } catch (error) {
+    console.error('Error retrieving projects:', error);
+    return [];
+  }
+};
 
 export async function getResumeContent(): Promise<string> {
-  return await fetchCollection('chat-content', 'resumeContent');
+  return await fetchContent('resume');
 };
 
 export async function getAIGreetings(): Promise<string> {
-  return await fetchCollection('chat-content', 'greetings');
+  return await fetchContent('greeting');
 };
 
 export async function getCV(): Promise<string> {
-  return await fetchCollection('data', 'cv');
+  return await fetchContent('cv');
 };
 
 export async function getAIQuotaExceeded(): Promise<boolean> {
   try {
-    const doc = await db.collection('settings').doc('aiStatus').get();
-    return doc.exists ? (doc.data()?.quotaExceeded === true) : false;
+    const { data, error } = await supabase
+      .from('settings')
+      .select('value')
+      .eq('key', 'ai_status')
+      .single();
+
+    if (error || !data) return false;
+    return data.value?.quotaExceeded === true;
   } catch {
     return false;
   }
@@ -23,32 +56,38 @@ export async function getAIQuotaExceeded(): Promise<boolean> {
 
 export async function setAIQuotaExceeded(value: boolean): Promise<void> {
   try {
-    await db.collection('settings').doc('aiStatus').set({ quotaExceeded: value }, { merge: true });
+    await supabase
+      .from('settings')
+      .upsert({ key: 'ai_status', value: { quotaExceeded: value }, updated_at: new Date().toISOString() });
   } catch (error) {
     console.error('Failed to persist AI quota status:', error);
   }
 };
 
-async function fetchCollection(collection: string, docId: string): Promise<string> {
+async function fetchContent(type: string): Promise<string> {
   try {
-    const doc = await db.collection(collection).doc(docId).get();
+    const { data, error } = await supabase
+      .from('content')
+      .select('data')
+      .eq('type', type)
+      .single();
 
-    if (!doc.exists) {
-      console.warn(`${docId} document not found, using default.`);
-      return getDefaultContent(docId);
+    if (error || !data) {
+      console.warn(`[Supabase] Content type '${type}' not found, using default.`);
+      return getDefaultContent(type);
     }
 
-    const data = doc.data();
-    return typeof data?.value === 'string' ? data.value : getDefaultContent(docId);
+    return typeof data.data?.value === 'string' ? data.data.value : getDefaultContent(type);
   } catch (error) {
-    console.error(`Error retrieving ${docId}:`, error);
-    return getDefaultContent(docId);
+    console.error(`Error retrieving content type '${type}':`, error);
+    return getDefaultContent(type);
   }
 };
 
-function getDefaultContent(docId: string): string {
-  switch (docId) {
-    case 'resumeContent':
+
+function getDefaultContent(type: string): string {
+  switch (type) {
+    case 'resume':
       return `
         Nathan (Jonathan) - Full Stack Web & Mobile Developer
         Current Role: Web Developer/Programmer Analyst S3 at Metrobank (client)
@@ -79,10 +118,10 @@ function getDefaultContent(docId: string): string {
 
         Contact: jonathanconcepcion1991@gmail.com | +639602367316 (Smart) | +639661957128 (Globe)
         `;
-    case 'greetings':
+    case 'greeting':
       return `Greetings! I’m Scaeva, Nathan’s personal AI assistant. If you’re here to learn more about him, I’d be happy to help.`;
     case 'cv':
-      return 'https://drive.usercontent.google.com/download?id=1egdqN9WKju7x6hcXfBUvHxwQiCH2RM2_&export=download&authuser=0';
+      return '/cv.pdf';
     default:
       return '';
   }
