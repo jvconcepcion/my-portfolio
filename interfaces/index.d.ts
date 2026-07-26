@@ -72,13 +72,6 @@ export interface SocialDataProps {
 };
 
 // about types
-export interface AboutDataProps {
-  title: string,
-  info: {
-    [key: string]: any
-  }[]
-};
-
 export interface TabNameProps {
   title: string,
   tabIndex: number,

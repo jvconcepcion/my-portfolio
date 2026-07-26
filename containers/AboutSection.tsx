@@ -1,13 +1,15 @@
 'use client';
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Avatar, Abstract, IconCloud, TextCloud, StackList, ChatPopUp } from '@components';
 
 import { motion } from 'framer-motion';
 import { experienceOptions, educationOptions, fadeIn } from '@utils/variants';
 import { TabNameProps } from '@interfaces';
-import { aboutData } from '@utils';
 import CountUp from 'react-countup';
+import { Spinner } from '@chakra-ui/react';
+
+type AboutTab = { title: string; info: any[] };
 
 const slugs: any = [
   'adobephotoshop',
@@ -51,7 +53,7 @@ const TabName = ({
   </div>
 );
 
-const TabInfo = ({ index }: { index: number }) => {
+const TabInfo = ({ index, aboutData }: { index: number; aboutData: AboutTab[] }) => {
   const [iconMode, setIconMode] = useState<boolean>(true);
   const currentTab: string = aboutData[index].title.toLowerCase();
   const info = aboutData[index].info;
@@ -97,6 +99,22 @@ const TabInfo = ({ index }: { index: number }) => {
 
 const AboutSection = () => {
   const [index, setIndex] = useState<number>(0);
+  const [aboutData, setAboutData] = useState<AboutTab[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    fetch('/api/data/about')
+      .then(res => res.json())
+      .then(data => {
+        setAboutData([
+          { title: 'skills', info: [{ knowledge: data.skills ?? [] }] },
+          { title: 'experience', info: data.experience ?? [] },
+          { title: 'education', info: data.education ?? [] },
+        ]);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   return (
     <>
@@ -160,18 +178,26 @@ const AboutSection = () => {
           animate='show'
           exit='hidden'
         >
-          <div className='flex gap-x-4 xl:gap-x-8 mx-auto xl:mx-0 mb-4'>
-            {aboutData.map(({ title }: { title: string }, i: number) => <TabName
-              key={i}
-              title={title}
-              tabIndex={i}
-              currentIndex={index}
-              setIndex={() => setIndex(i)}
-            />)}
-          </div>
-          <div className='py-2 flex flex-col gap-y-2 xl:gap-y-4 items-center xl:items-start w-full'>
-            <TabInfo index={index} />
-          </div>
+          {loading || aboutData.length === 0 ? (
+            <div className='flex-1 flex items-center justify-center w-full'>
+              <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />
+            </div>
+          ) : (
+            <>
+              <div className='flex gap-x-4 xl:gap-x-8 mx-auto xl:mx-0 mb-4'>
+                {aboutData.map(({ title }: { title: string }, i: number) => <TabName
+                  key={i}
+                  title={title}
+                  tabIndex={i}
+                  currentIndex={index}
+                  setIndex={() => setIndex(i)}
+                />)}
+              </div>
+              <div className='py-2 flex flex-col gap-y-2 xl:gap-y-4 items-center xl:items-start w-full'>
+                <TabInfo index={index} aboutData={aboutData} />
+              </div>
+            </>
+          )}
         </motion.div>
       </div>
     </>
